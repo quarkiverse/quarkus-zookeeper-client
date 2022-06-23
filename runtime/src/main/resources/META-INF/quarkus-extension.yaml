@@ -1,0 +1,10 @@
+name: Zookeeper
+#description: Zookeeper ...
+metadata:
+  keywords:
+    - zookeeper
+#  guide: ...
+  categories:
+    - "platform"
+    - "microservices"
+  status: "preview"
