@@ -13,6 +13,7 @@ public class ZookeeperTest {
     // Start unit test with your extension loaded
     @RegisterExtension
     static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
+            .withConfigurationResource("application.properties")
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @Test

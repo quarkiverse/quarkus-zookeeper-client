@@ -1,4 +1,4 @@
-package io.quarkiverse.quarkus.zookeeper;
+package io.quarkiverse.quarkus.zookeeper.it;
 
 import java.util.Map;
 

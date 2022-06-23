@@ -7,7 +7,7 @@ import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 
 @ConfigRoot(name = io.quarkiverse.zookeeper.config.ZookeeperConfig.CONFIG_NAME, phase = ConfigPhase.BUILD_TIME)
-public class ZookeeperConfig {
+public class ZookeeperBuildTimeConfig {
 
     /**
      * Whether to enable health checks.
