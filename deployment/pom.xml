@@ -15,6 +15,10 @@
       <artifactId>quarkus-arc-deployment</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-health-spi</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.quarkiverse.quarkus-zookeeper</groupId>
       <artifactId>quarkus-zookeeper</artifactId>
       <version>${project.version}</version>
