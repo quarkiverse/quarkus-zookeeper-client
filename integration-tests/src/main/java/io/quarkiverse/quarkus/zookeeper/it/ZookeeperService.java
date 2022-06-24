@@ -46,10 +46,16 @@ public class ZookeeperService implements AsyncObserverExceptionHandler {
     }
 
     public Uni<String> sayConnected() {
-        if (!CONNECTED_STATES_CL.contains(client.getState())) {
-            waitForIt();
-        }
-        return Uni.createFrom().item(client::getState).map(States::name);
+        return Uni.createFrom().item(client::getState)
+                .onItem().delayIt().until(state -> {
+                    if (CONNECTED_STATES_CL.contains(state)) {
+                        return Uni.createFrom().item(state);
+                    } else {
+                        return sayConnected();
+                    }
+                })
+                .map(state -> client.getState())
+                .map(States::name);
     }
 
     public String sayConnectedS() {
