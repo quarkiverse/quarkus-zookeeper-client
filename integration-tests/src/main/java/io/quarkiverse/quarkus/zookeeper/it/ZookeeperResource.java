@@ -23,6 +23,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import io.smallrye.mutiny.Uni;
+
 @Path("/zookeeper")
 @RequestScoped
 public class ZookeeperResource {
@@ -31,10 +33,18 @@ public class ZookeeperResource {
     ZookeeperService service;
 
     @GET
+    @Path("/reactive")
     @Produces(MediaType.APPLICATION_JSON)
-    public String sayConnected() {
+    public Uni<String> sayConnected() {
 
-        var rv = service.sayConnectedS();
-        return rv;
+        return service.sayConnected();
+    }
+
+    @GET
+    @Path("/imperative")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String sayConnectedS() {
+
+        return service.sayConnectedS();
     }
 }

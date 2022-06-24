@@ -16,9 +16,18 @@ import io.quarkus.test.junit.QuarkusTest;
 public class ZookeeperResourceTest {
 
     @Test
-    public void testHelloEndpoint() {
+    public void testReactiveEndpoint() {
         given()
-                .when().get()
+                .when().get("/reactive")
+                .then()
+                .statusCode(200)
+                .body(is(States.CONNECTED.name()));
+    }
+
+    @Test
+    public void testImperativeEndpoint() {
+        given()
+                .when().get("/imperative")
                 .then()
                 .statusCode(200)
                 .body(is(States.CONNECTED.name()));
