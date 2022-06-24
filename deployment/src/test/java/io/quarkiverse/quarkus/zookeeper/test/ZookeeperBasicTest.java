@@ -1,7 +1,6 @@
 package io.quarkiverse.quarkus.zookeeper.test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,8 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 import org.jboss.logging.Logger;
@@ -54,33 +51,27 @@ public class ZookeeperBasicTest {
         ZOOKEEPER.stop();
     }
 
-    @Inject ZooKeeper zk;
+    @Inject
+    ZooKeeper zk;
 
     @Test
     public void testBasicConnection() throws IOException {
 
         assertNotNull(zk);
 
-        LOG.infof("Zookeeper connection string is [%s]", cnString);
-
         final Phaser testCoordinator = new Phaser(2);
         final AtomicBoolean connected = new AtomicBoolean(false);
-        var zk = new ZooKeeper(cnString, cnTimeout,
-                new Watcher() {
-
-                    @Override
-                    public void process(WatchedEvent event) {
-                        LOG.infof("Processing event for state [%s] and type [%s]", event.getState(), event.getType());
-                        if (KeeperState.SyncConnected == event.getState()) {
-                            LOG.info("Client connected to zookeeper");
-                            connected.compareAndSet(false, true);
-                            testCoordinator.arrive();
-                        } else if (KeeperState.Closed == event.getState()) {
-                            LOG.info("Client connection closed");
-                            testCoordinator.arriveAndDeregister();
-                        }
-                    }
-                }, canBeReadOnly);
+        zk.register(event -> {
+            LOG.infof("Processing event for state [%s] and type [%s]", event.getState(), event.getType());
+            if (KeeperState.SyncConnected == event.getState()) {
+                LOG.info("Client connected to zookeeper");
+                connected.compareAndSet(false, true);
+                testCoordinator.arrive();
+            } else if (KeeperState.Closed == event.getState()) {
+                LOG.info("Client connection closed");
+                testCoordinator.arriveAndDeregister();
+            }
+        });
 
         assertFalse(connected.get());
         var testPhase = testCoordinator.arrive();
@@ -94,8 +85,9 @@ public class ZookeeperBasicTest {
         }
         assertTrue(connected.get());
 
+        // Just forcing to close the client for test purposes, see ZookeeperClientProducerBean#tearDown
         try {
-            zk.close(30000);
+            zk.close(30_000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);

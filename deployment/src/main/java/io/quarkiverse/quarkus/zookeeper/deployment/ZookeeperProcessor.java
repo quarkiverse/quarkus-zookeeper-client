@@ -1,6 +1,7 @@
 package io.quarkiverse.quarkus.zookeeper.deployment;
 
 import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfig;
+import io.quarkiverse.zookeeper.infrastructure.ClientStatusWatcher;
 import io.quarkiverse.zookeeper.infrastructure.ZookeeperClientProducerBean;
 import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperLiveCheck;
 import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
@@ -21,8 +22,13 @@ class ZookeeperProcessor {
     }
 
     @BuildStep
-    AdditionalBeanBuildItem additionalBeans() {
+    AdditionalBeanBuildItem additionalBeansProducer() {
         return new AdditionalBeanBuildItem(ZookeeperClientProducerBean.class);
+    }
+
+    @BuildStep
+    AdditionalBeanBuildItem additionalBeansWatch() {
+        return new AdditionalBeanBuildItem(ClientStatusWatcher.class);
     }
 
     @BuildStep

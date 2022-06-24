@@ -20,19 +20,21 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-
-import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.ZooKeeper.States;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Path("/zookeeper")
 @RequestScoped
 public class ZookeeperResource {
 
     @Inject
-    ZooKeeper client;
+    ZookeeperService service;
 
     @GET
-    public States hello() {
-        return client.getState();
+    @Produces(MediaType.APPLICATION_JSON)
+    public String sayConnected() {
+
+        var rv = service.sayConnectedS();
+        return rv;
     }
 }

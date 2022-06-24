@@ -9,8 +9,8 @@ import io.quarkus.runtime.annotations.ConfigItem;
 public class SessionConfig {
 
     public static final String CONNECTION_STRING = "quarkus.zookeeper.session.connectionString";
-    public static final String TIMEOUT           = "quarkus.zookeeper.session.timeout";
-    public static final String CAN_BE_READ_ONLY  = "quarkus.zookeeper.session.canBeReadOnly";
+    public static final String TIMEOUT = "quarkus.zookeeper.session.timeout";
+    public static final String CAN_BE_READ_ONLY = "quarkus.zookeeper.session.canBeReadOnly";
 
     /**
      * Comma separated host:port pairs, each corresponding to a zk server.

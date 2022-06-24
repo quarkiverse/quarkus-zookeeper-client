@@ -1,8 +1,9 @@
 package io.quarkiverse.quarkus.zookeeper.it;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.is;
 
+import org.apache.zookeeper.ZooKeeper.States;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.QuarkusTestResource;
@@ -20,6 +21,6 @@ public class ZookeeperResourceTest {
                 .when().get()
                 .then()
                 .statusCode(200)
-                .body(endsWith("Hello World!!!"));
+                .body(is(States.CONNECTED.name()));
     }
 }
