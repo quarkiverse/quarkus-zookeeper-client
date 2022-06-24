@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
 
-import io.quarkiverse.zookeeper.infrastructure.ZookeeperClientBean;
+import io.quarkiverse.zookeeper.infrastructure.ZookeeperClientProducerBean;
 import io.smallrye.health.api.AsyncHealthCheck;
 import io.smallrye.mutiny.Uni;
 
@@ -15,6 +15,6 @@ public class ZookeeperLiveCheck implements AsyncHealthCheck {
 
     @Override
     public Uni<HealthCheckResponse> call() {
-        return Uni.createFrom().item(HealthCheckResponse.up(ZookeeperClientBean.EXTENSION_NAME));
+        return Uni.createFrom().item(HealthCheckResponse.up(ZookeeperClientProducerBean.EXTENSION_NAME));
     }
 }

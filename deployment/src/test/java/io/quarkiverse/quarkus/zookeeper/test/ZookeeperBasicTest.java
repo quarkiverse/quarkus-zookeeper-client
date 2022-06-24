@@ -1,5 +1,6 @@
 package io.quarkiverse.quarkus.zookeeper.test;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,11 +11,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -52,21 +54,12 @@ public class ZookeeperBasicTest {
         ZOOKEEPER.stop();
     }
 
-    @ConfigProperty(name = "quarkus.zookeeper.session.connectionString")
-    String cnString;
-
-    @ConfigProperty(name = "quarkus.zookeeper.session.timeout")
-    int cnTimeout;
-
-    @ConfigProperty(name = "quarkus.zookeeper.session.canBeReadOnly")
-    boolean canBeReadOnly;
+    @Inject ZooKeeper zk;
 
     @Test
     public void testBasicConnection() throws IOException {
 
-        assertEquals("127.0.0.1:32181", cnString);
-        assertEquals(15, cnTimeout);
-        assertTrue(canBeReadOnly);
+        assertNotNull(zk);
 
         LOG.infof("Zookeeper connection string is [%s]", cnString);
 

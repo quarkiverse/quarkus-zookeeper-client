@@ -16,22 +16,23 @@
 */
 package io.quarkiverse.quarkus.zookeeper.it;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import io.quarkiverse.zookeeper.ZookeeperClient;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.ZooKeeper.States;
 
 @Path("/zookeeper")
-@ApplicationScoped
+@RequestScoped
 public class ZookeeperResource {
 
     @Inject
-    ZookeeperClient client;
+    ZooKeeper client;
 
     @GET
-    public String hello() {
-        return client.getHello();
+    public States hello() {
+        return client.getState();
     }
 }
