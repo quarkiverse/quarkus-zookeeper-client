@@ -10,6 +10,7 @@ import io.quarkus.deployment.Capabilities;
 import io.quarkus.deployment.Capability;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
 class ZookeeperProcessor {
@@ -23,12 +24,9 @@ class ZookeeperProcessor {
 
     @BuildStep
     AdditionalBeanBuildItem additionalBeansProducer() {
-        return new AdditionalBeanBuildItem(ZookeeperClientProducerBean.class);
-    }
-
-    @BuildStep
-    AdditionalBeanBuildItem additionalBeansWatch() {
-        return new AdditionalBeanBuildItem(ClientStatusWatcher.class);
+        return new AdditionalBeanBuildItem(
+                ZookeeperClientProducerBean.class,
+                ClientStatusWatcher.class);
     }
 
     @BuildStep
@@ -49,5 +47,12 @@ class ZookeeperProcessor {
         } else {
             return null;
         }
+    }
+
+    @BuildStep
+    ReflectiveClassBuildItem addClientSocket() {
+        return new ReflectiveClassBuildItem(false, false,
+                org.apache.zookeeper.ClientCnxnSocketNIO.class,
+                org.apache.zookeeper.ClientCnxnSocketNetty.class);
     }
 }

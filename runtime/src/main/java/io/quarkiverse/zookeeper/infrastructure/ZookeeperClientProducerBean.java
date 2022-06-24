@@ -13,7 +13,6 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.ZooKeeper.States;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
-import org.wildfly.common.annotation.Nullable;
 
 import io.quarkiverse.zookeeper.config.SessionConfig;
 
@@ -45,13 +44,9 @@ public class ZookeeperClientProducerBean {
     private ZooKeeper client = null;
 
     @PostConstruct
-    public void init() {
-        try {
-            client = new ZooKeeper(cnString, cnTimeout, watcher, canBeReadOnly);
-            LOG.infof("Zookeeper client has been initialized for [%s].", cnString);
-        } catch (IOException e) {
-            LOG.error("Cannot initialize the zookeeper client.", e);
-        }
+    public void init() throws IOException {
+        client = new ZooKeeper(cnString, cnTimeout, watcher, canBeReadOnly);
+        LOG.infof("Zookeeper client has been initialized for [%s].", cnString);
     }
 
     @PreDestroy
@@ -70,10 +65,7 @@ public class ZookeeperClientProducerBean {
 
     @Produces
     @ApplicationScoped
-    public @Nullable synchronized ZooKeeper createZKClient() {
-        if (client == null || !CLOSEABLE_STATES.contains(client.getState())) {
-            init();
-        }
+    public ZooKeeper createZKClient() {
         return client;
     }
 }
