@@ -1,8 +1,6 @@
 package io.quarkiverse.quarkus.zookeeper.it;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
@@ -20,7 +18,6 @@ import org.jboss.logging.Logger;
 
 import io.quarkus.arc.AsyncObserverExceptionHandler;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.unchecked.Unchecked;
 
 @ApplicationScoped
 public class ZookeeperService implements AsyncObserverExceptionHandler {
@@ -51,16 +48,11 @@ public class ZookeeperService implements AsyncObserverExceptionHandler {
     }
 
     public Uni<String> sayConnected() {
-        final Instant requestInstant = Instant.now();
         return Uni.createFrom().item(client::getState)
-                .onItem().delayIt().until(state -> {
-                    if (CONNECTED_STATES_CL.contains(state)) {
-                        return Uni.createFrom().item(state);
-                    } else {
-                        return innerSayConnected(requestInstant);
-                    }
-                })
-                .map(state -> client.getState())
+                .repeat().until(CONNECTED_STATES_CL::contains)
+                .ifNoItem().after(Duration.ofSeconds(10)).failWith(TimeoutException::new)
+                .select().last().toUni()
+                .map(_lastUnwantedState -> client.getState())
                 .map(States::name);
     }
 
@@ -69,27 +61,6 @@ public class ZookeeperService implements AsyncObserverExceptionHandler {
             waitForIt();
         }
         return client.getState().name();
-    }
-
-    private Uni<States> innerSayConnected(final Instant requestInstant) {
-        return Uni.createFrom().item(client::getState)
-                .onItem().delayIt().until(Unchecked.function(state -> {
-
-                    if (timeoutWithin(requestInstant, 10, ChronoUnit.SECONDS)) {
-                        throw new TimeoutException();
-                    }
-
-                    if (CONNECTED_STATES_CL.contains(state)) {
-                        return Uni.createFrom().item(state);
-                    } else {
-                        return innerSayConnected(requestInstant);
-                    }
-                }));
-    }
-
-    private boolean timeoutWithin(Instant requestInstant, int amount, ChronoUnit amountUnit) {
-        return Duration.of(amount, amountUnit).minus(
-                Duration.between(requestInstant, Instant.now()).abs()).isNegative();
     }
 
     private synchronized void waitForIt() {
