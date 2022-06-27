@@ -12,6 +12,12 @@ public class ZookeeperConfig {
     public static final String CONFIG_NAME = "zookeeper";
 
     /**
+     * The default zookeeper client configuration.
+     */
+    @ConfigItem
+    public ClientConfig client;
+
+    /**
      * The default zookeeper client connection.
      */
     @ConfigItem

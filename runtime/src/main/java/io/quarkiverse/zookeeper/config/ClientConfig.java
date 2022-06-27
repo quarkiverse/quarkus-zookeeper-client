@@ -2,12 +2,20 @@ package io.quarkiverse.zookeeper.config;
 
 import java.util.Optional;
 
+import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
-import io.quarkus.runtime.annotations.ConfigPhase;
-import io.quarkus.runtime.annotations.ConfigRoot;
 
-@ConfigRoot(prefix = "quarkus.zookeeper", name = "client", phase = ConfigPhase.RUN_TIME)
+@ConfigGroup
 public class ClientConfig {
+
+    public static final String CONNECTION_TIMEOUT_MILLIS  = "quarkus.zookeeper.client.connectionTimeoutMillis";
+    public static final String CONNECTION_TIMEOUT_DEFAULT = "30000";
+
+    /**
+     * Connection timeout in millis.
+     */
+    @ConfigItem(name = "connectionTimeoutMillis", defaultValue = CONNECTION_TIMEOUT_DEFAULT, defaultValueDocumentation = CONNECTION_TIMEOUT_DEFAULT)
+    public Optional<Integer> connectionTimeoutMillis;
 
     /**
      * This switch controls whether automatic watch resetting is enabled. Clients automatically reset watches during session

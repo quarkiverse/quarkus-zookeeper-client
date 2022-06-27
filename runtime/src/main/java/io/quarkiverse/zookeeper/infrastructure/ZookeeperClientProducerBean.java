@@ -30,10 +30,10 @@ public class ZookeeperClientProducerBean {
             States.CONNECTING);
 
     @ConfigProperty(name = SessionConfig.CONNECTION_STRING)
-    String cnString;
+    String connectionString;
 
     @ConfigProperty(name = SessionConfig.TIMEOUT)
-    int cnTimeout;
+    int sessionTimeout;
 
     @ConfigProperty(name = SessionConfig.CAN_BE_READ_ONLY)
     boolean canBeReadOnly;
@@ -45,8 +45,8 @@ public class ZookeeperClientProducerBean {
 
     @PostConstruct
     public void init() throws IOException {
-        client = new ZooKeeper(cnString, cnTimeout, watcher, canBeReadOnly);
-        LOG.infof("Zookeeper client has been initialized for [%s].", cnString);
+        client = new ZooKeeper(connectionString, sessionTimeout, watcher, canBeReadOnly);
+        LOG.infof("Zookeeper client has been initialized for [%s].", connectionString);
     }
 
     @PreDestroy
