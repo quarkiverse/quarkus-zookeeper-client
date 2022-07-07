@@ -17,7 +17,7 @@ public class ZookeeperTestServer implements QuarkusTestResourceLifecycleManager 
     public Map<String, String> start() {
         ZOOKEEPER.start();
         return Map.of(
-                "quarkus.zookeeper.session.connectionString",
+                "quarkus.zookeeper.session.connection-string",
                 String.format("%s:%d", ZOOKEEPER.getHost(), ZOOKEEPER.getMappedPort(2181)));
     }
 

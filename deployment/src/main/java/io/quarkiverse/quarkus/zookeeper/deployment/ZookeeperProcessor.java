@@ -1,15 +1,21 @@
 package io.quarkiverse.quarkus.zookeeper.deployment;
 
-import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfig;
-import io.quarkiverse.zookeeper.infrastructure.ClientStatusWatcher;
-import io.quarkiverse.zookeeper.infrastructure.ZookeeperClientProducerBean;
+import javax.enterprise.context.ApplicationScoped;
+
+import org.apache.zookeeper.ZooKeeper;
+
+import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
+import io.quarkiverse.zookeeper.deployment.ZookeeperRecorder;
+// import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperLiveCheck;
-import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
-import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
+import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.deployment.Capabilities;
 import io.quarkus.deployment.Capability;
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.annotations.ExecutionTime;
+import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
@@ -23,27 +29,10 @@ class ZookeeperProcessor {
     }
 
     @BuildStep
-    AdditionalBeanBuildItem additionalBeansProducer() {
-        return new AdditionalBeanBuildItem(
-                ZookeeperClientProducerBean.class,
-                ClientStatusWatcher.class);
-    }
-
-    @BuildStep
-    HealthBuildItem addLiveCheck(Capabilities capabilities, ZookeeperBuildTimeConfig config) {
+    HealthBuildItem addLiveCheck(Capabilities capabilities, ZookeeperBuildTimeConfiguration config) {
         if (capabilities.isPresent(Capability.SMALLRYE_HEALTH)) {
             return new HealthBuildItem(ZookeeperLiveCheck.class.getName(),
-                    config.healthEnabled.orElse(Boolean.TRUE));
-        } else {
-            return null;
-        }
-    }
-
-    @BuildStep
-    HealthBuildItem addReadyCheck(Capabilities capabilities, ZookeeperBuildTimeConfig config) {
-        if (capabilities.isPresent(Capability.SMALLRYE_HEALTH)) {
-            return new HealthBuildItem(ZookeeperReadyCheck.class.getName(),
-                    config.healthEnabled.orElse(Boolean.TRUE));
+                    config.healthEnabled);
         } else {
             return null;
         }
@@ -54,5 +43,19 @@ class ZookeeperProcessor {
         return new ReflectiveClassBuildItem(false, false,
                 org.apache.zookeeper.ClientCnxnSocketNIO.class,
                 org.apache.zookeeper.ClientCnxnSocketNetty.class);
+    }
+
+    @BuildStep
+    @Record(value = ExecutionTime.RUNTIME_INIT)
+    SyntheticBeanBuildItem createZookeeperBean(ZookeeperRecorder recorder,
+            ShutdownContextBuildItem shutdownContextBuildItem) {
+
+        var zk = recorder.create(shutdownContextBuildItem);
+        return SyntheticBeanBuildItem
+                .configure(ZooKeeper.class)
+                .scope(ApplicationScoped.class)
+                .runtimeValue(zk)
+                .setRuntimeInit()
+                .done();
     }
 }

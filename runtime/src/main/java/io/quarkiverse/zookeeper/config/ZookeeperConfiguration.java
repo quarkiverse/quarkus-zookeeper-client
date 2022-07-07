@@ -1,15 +1,11 @@
 package io.quarkiverse.zookeeper.config;
 
-import java.util.Optional;
-
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 
-@ConfigRoot(name = ZookeeperConfig.CONFIG_NAME, phase = ConfigPhase.RUN_TIME)
-public class ZookeeperConfig {
-
-    public static final String CONFIG_NAME = "zookeeper";
+@ConfigRoot(phase = ConfigPhase.RUN_TIME)
+public class ZookeeperConfiguration {
 
     /**
      * The default zookeeper client configuration.
@@ -27,5 +23,5 @@ public class ZookeeperConfig {
      * Whether to enable health checks.
      */
     @ConfigItem(name = "health.enabled", defaultValue = "true", defaultValueDocumentation = "true")
-    public Optional<Boolean> healthEnabled;
+    public boolean healthEnabled;
 }

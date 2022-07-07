@@ -84,23 +84,5 @@ public class ZookeeperBasicTest {
             throw new RuntimeException(e);
         }
         assertTrue(connected.get());
-
-        // Just forcing to close the client for test purposes, see ZookeeperClientProducerBean#tearDown
-        try {
-            zk.close(30_000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
-        } finally {
-            var finalPhase = testCoordinator.arriveAndDeregister();
-            try {
-                testCoordinator.awaitAdvanceInterruptibly(finalPhase, 30, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
-            } catch (TimeoutException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }
