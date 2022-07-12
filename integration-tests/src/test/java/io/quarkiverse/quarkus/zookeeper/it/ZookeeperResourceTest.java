@@ -13,10 +13,10 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @QuarkusTestResource(ZookeeperTestServer.class)
 @TestHTTPEndpoint(ZookeeperResource.class)
-public class ZookeeperResourceTest {
+class ZookeeperResourceTest {
 
     @Test
-    public void testReactiveEndpoint() {
+    void testReactiveEndpoint() {
         given()
                 .when().get("/reactive")
                 .then()
@@ -25,7 +25,7 @@ public class ZookeeperResourceTest {
     }
 
     @Test
-    public void testImperativeEndpoint() {
+    void testImperativeEndpoint() {
         given()
                 .when().get("/imperative")
                 .then()

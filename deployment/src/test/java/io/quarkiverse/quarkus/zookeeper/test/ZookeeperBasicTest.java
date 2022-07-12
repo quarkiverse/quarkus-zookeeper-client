@@ -55,7 +55,7 @@ public class ZookeeperBasicTest {
     ZooKeeper zk;
 
     @Test
-    public void testBasicConnection() throws IOException {
+    void testBasicConnection() throws IOException {
 
         assertNotNull(zk);
 

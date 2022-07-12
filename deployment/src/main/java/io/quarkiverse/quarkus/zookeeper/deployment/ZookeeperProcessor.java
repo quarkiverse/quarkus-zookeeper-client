@@ -5,9 +5,10 @@ import javax.enterprise.context.ApplicationScoped;
 import org.apache.zookeeper.ZooKeeper;
 
 import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
+import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
 import io.quarkiverse.zookeeper.deployment.ZookeeperRecorder;
 // import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
-import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperLiveCheck;
+import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.deployment.Capabilities;
 import io.quarkus.deployment.Capability;
@@ -21,7 +22,7 @@ import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
 class ZookeeperProcessor {
 
-    private static final String FEATURE = "zookeeper";
+    private static final String FEATURE = ZookeeperConfiguration.EXTENSION_NAME;
 
     @BuildStep
     FeatureBuildItem zookeeper() {
@@ -31,7 +32,7 @@ class ZookeeperProcessor {
     @BuildStep
     HealthBuildItem addLiveCheck(Capabilities capabilities, ZookeeperBuildTimeConfiguration config) {
         if (capabilities.isPresent(Capability.SMALLRYE_HEALTH)) {
-            return new HealthBuildItem(ZookeeperLiveCheck.class.getName(),
+            return new HealthBuildItem(ZookeeperReadyCheck.class.getName(),
                     config.healthEnabled);
         } else {
             return null;
@@ -56,6 +57,7 @@ class ZookeeperProcessor {
                 .scope(ApplicationScoped.class)
                 .runtimeValue(zk)
                 .setRuntimeInit()
+                .unremovable()
                 .done();
     }
 }
