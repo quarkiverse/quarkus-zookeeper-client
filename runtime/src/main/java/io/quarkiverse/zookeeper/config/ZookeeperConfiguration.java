@@ -7,6 +7,8 @@ import io.quarkus.runtime.annotations.ConfigRoot;
 @ConfigRoot(phase = ConfigPhase.RUN_TIME)
 public class ZookeeperConfiguration {
 
+    public static final String EXTENSION_NAME = "zookeeper";
+
     /**
      * The default zookeeper client configuration.
      */
