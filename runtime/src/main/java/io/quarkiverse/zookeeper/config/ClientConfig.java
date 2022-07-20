@@ -10,6 +10,12 @@ public class ClientConfig {
     public static final String CONNECTION_TIMEOUT_DEFAULT = "30000";
 
     /**
+     * Client authentication
+     */
+    @ConfigItem
+    public SaslConfig auth;
+
+    /**
      * Connection timeout in millis.
      */
     @ConfigItem(defaultValue = CONNECTION_TIMEOUT_DEFAULT, defaultValueDocumentation = CONNECTION_TIMEOUT_DEFAULT)

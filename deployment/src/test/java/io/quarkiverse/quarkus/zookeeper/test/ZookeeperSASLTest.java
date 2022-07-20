@@ -24,25 +24,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.MountableFile;
 
 import io.quarkus.test.QuarkusUnitTest;
 
-public class ZookeeperBasicTest {
+public class ZookeeperSASLTest {
 
-    private static final Logger LOG = Logger.getLogger(ZookeeperBasicTest.class);
+    private static final Logger LOG = Logger.getLogger(ZookeeperSASLTest.class);
 
     // Start unit test with your extension loaded
     @RegisterExtension
     static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
-            .withConfigurationResource("basic-connection.properties")
+            .withConfigurationResource("sasl-connection.properties")
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @SuppressWarnings("deprecation")
     // Using a fixed hostPort to match the config property as defined in the basic-connection.properties
     private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
             .withEnv(Map.of(
-                    "ZOO_AUTOPURGE_PURGEINTERVAL", "10"))
-            .withFixedExposedPort(32181, 2181);
+                    "ZOO_AUTOPURGE_PURGEINTERVAL", "10",
+                    "JVMFLAGS",
+                    "-Dzookeeper.superUser=su -Dzookeeper.sessionRequireClientSASLAuth=true -Djava.security.auth.login.config=/etc/zookeeper/server_jaas.conf"))
+            .withCopyFileToContainer(MountableFile.forClasspathResource("server_jaas.conf"), "/etc/zookeeper/server_jaas.conf")
+            .withFixedExposedPort(42181, 2181);
 
     @BeforeAll
     public static void startZookeeper() {

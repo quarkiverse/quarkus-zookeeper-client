@@ -2,24 +2,23 @@ package io.quarkiverse.zookeeper.config;
 
 import java.util.Optional;
 
+import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
-import io.quarkus.runtime.annotations.ConfigPhase;
-import io.quarkus.runtime.annotations.ConfigRoot;
 
-@ConfigRoot(prefix = "quarkus.zookeeper.client", name = "auth", phase = ConfigPhase.RUN_TIME)
+@ConfigGroup
 public class SaslConfig {
 
     /**
      * Set the value to true to enable SASL authentication.
      */
-    @ConfigItem(defaultValue = "false", defaultValueDocumentation = "false")
-    public Optional<Boolean> client;
+    @ConfigItem(name = "sasl.enabled", defaultValue = "false", defaultValueDocumentation = "false")
+    public boolean enabled;
 
     /**
      * Specifies the context key in the JAAS login file.
      */
-    @ConfigItem(name = "clientconfig", defaultValue = "Client", defaultValueDocumentation = "Client")
-    public Optional<String> clientconfig;
+    @ConfigItem(defaultValue = "Client", defaultValueDocumentation = "Client")
+    public String clientconfig;
 
     /**
      * Specifies the server principal to be used by the client for authentication, while connecting to the zookeeper server,
@@ -36,7 +35,7 @@ public class SaslConfig {
      * principal.
      */
     @ConfigItem(name = "clientUsername", defaultValue = "zookeeper", defaultValueDocumentation = "zookeeper")
-    public Optional<String> clientUsername;
+    public String clientUsername;
 
     /**
      * Expecting the zookeeper.server.principal parameter is not provided, the ZooKeeper client will try to determine the
@@ -44,8 +43,8 @@ public class SaslConfig {
      * connection string. Then it tries to 'canonicalize' the address by getting the fully qualified domain name belonging to
      * the address. You can disable this 'canonicalization' by setting: zookeeper.sasl.client.canonicalize.hostname=false.
      */
-    @ConfigItem(name = "clientCanonicalizeHostname")
-    public Optional<Boolean> clientCanonicalizeHostname;
+    @ConfigItem(name = "clientCanonicalizeHostname", defaultValue = "true", defaultValueDocumentation = "true")
+    public boolean clientCanonicalizeHostname;
 
     /**
      * Realm part of the server principal. By default it is the client principal realm.
