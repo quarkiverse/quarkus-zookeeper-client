@@ -21,12 +21,22 @@ public class SaslConfig {
     public String clientconfig;
 
     /**
+     * SALS client configuration string, e.g.
+     * 
+     * <pre>
+     * org.apache.zookeeper.server.auth.DigestLoginModule required username="test" password="passwd";
+     * </pre>
+     */
+    @ConfigItem(name = "sasl.config-string")
+    public Optional<String> configString;
+
+    /**
      * Specifies the server principal to be used by the client for authentication, while connecting to the zookeeper server,
      * when Kerberos authentication is enabled. If this configuration is provided, then the ZooKeeper client will NOT USE any of
      * the following parameters to determine the server principal: zookeeper.sasl.client.username,
      * zookeeper.sasl.client.canonicalize.hostname, zookeeper.server.realm.
      */
-    @ConfigItem(name = "serverPrincipal")
+    @ConfigItem
     public Optional<String> serverPrincipal;
 
     /**
@@ -34,7 +44,7 @@ public class SaslConfig {
      * Kerberos V5 principal is primary/instance@REALM. zookeeper.sasl.client.username specifies the primary part of the server
      * principal.
      */
-    @ConfigItem(name = "clientUsername", defaultValue = "zookeeper", defaultValueDocumentation = "zookeeper")
+    @ConfigItem(defaultValue = "zookeeper", defaultValueDocumentation = "zookeeper")
     public String clientUsername;
 
     /**
@@ -43,12 +53,12 @@ public class SaslConfig {
      * connection string. Then it tries to 'canonicalize' the address by getting the fully qualified domain name belonging to
      * the address. You can disable this 'canonicalization' by setting: zookeeper.sasl.client.canonicalize.hostname=false.
      */
-    @ConfigItem(name = "clientCanonicalizeHostname", defaultValue = "true", defaultValueDocumentation = "true")
+    @ConfigItem(defaultValue = "true", defaultValueDocumentation = "true")
     public boolean clientCanonicalizeHostname;
 
     /**
      * Realm part of the server principal. By default it is the client principal realm.
      */
-    @ConfigItem(name = "serverRealm")
+    @ConfigItem
     public Optional<String> serverRealm;
 }

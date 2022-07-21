@@ -8,6 +8,7 @@ public class ClientConfig {
 
     public static final String CONNECTION_TIMEOUT_MILLIS = "quarkus.zookeeper.client.connection-timeout-millis";
     public static final String CONNECTION_TIMEOUT_DEFAULT = "30000";
+    public static final String REQUEST_TIMEOUT_DEFAULT = "5000";
 
     /**
      * Client authentication
@@ -20,6 +21,12 @@ public class ClientConfig {
      */
     @ConfigItem(defaultValue = CONNECTION_TIMEOUT_DEFAULT, defaultValueDocumentation = CONNECTION_TIMEOUT_DEFAULT)
     public int connectionTimeoutMillis;
+
+    /**
+     * Request timeout in millis.
+     */
+    @ConfigItem(defaultValue = REQUEST_TIMEOUT_DEFAULT, defaultValueDocumentation = REQUEST_TIMEOUT_DEFAULT)
+    public int requestTimeoutMillis;
 
     /**
      * This switch controls whether automatic watch resetting is enabled. Clients automatically reset watches during session

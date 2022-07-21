@@ -44,7 +44,7 @@ public class ZookeeperSASLTest {
             .withEnv(Map.of(
                     "ZOO_AUTOPURGE_PURGEINTERVAL", "10",
                     "JVMFLAGS",
-                    "-Dzookeeper.superUser=su -Dzookeeper.sessionRequireClientSASLAuth=true -Djava.security.auth.login.config=/etc/zookeeper/server_jaas.conf"))
+                    "-Dzookeeper.superUser=user_su -Dzookeeper.sessionRequireClientSASLAuth=true -Djava.security.auth.login.config=/etc/zookeeper/server_jaas.conf"))
             .withCopyFileToContainer(MountableFile.forClasspathResource("server_jaas.conf"), "/etc/zookeeper/server_jaas.conf")
             .withFixedExposedPort(42181, 2181);
 
