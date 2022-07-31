@@ -1,8 +1,8 @@
 package io.quarkiverse.quarkus.zookeeper.it;
 
 import java.time.Duration;
-import java.util.Set;
-import java.util.concurrent.TimeoutException;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.ObservesAsync;
@@ -17,6 +17,7 @@ import org.apache.zookeeper.ZooKeeper.States;
 import org.jboss.logging.Logger;
 
 import io.quarkus.arc.AsyncObserverExceptionHandler;
+import io.smallrye.mutiny.TimeoutException;
 import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
@@ -24,20 +25,15 @@ public class ZookeeperService implements AsyncObserverExceptionHandler {
 
     private static final Logger LOG = Logger.getLogger(ZookeeperService.class);
 
-    private static final Set<KeeperState> CONNECTED_STATES_EV = Set.of(
-            KeeperState.SyncConnected,
-            KeeperState.ConnectedReadOnly);
-
-    private static final Set<States> CONNECTED_STATES_CL = Set.of(
-            States.CONNECTED,
-            States.CONNECTEDREADONLY);
-
     @Inject
     ZooKeeper client;
 
+    private volatile AtomicBoolean authenticated = new AtomicBoolean(false);
+
     public synchronized void onZKEvent(@ObservesAsync WatchedEvent event) {
         LOG.infof("Receiving [%s]", event.getState());
-        if (CONNECTED_STATES_EV.contains(event.getState())) {
+        if (KeeperState.SaslAuthenticated == event.getState()) {
+            authenticated.getAndSet(true);
             notifyAll();
         }
     }
@@ -48,26 +44,30 @@ public class ZookeeperService implements AsyncObserverExceptionHandler {
     }
 
     public Uni<String> sayConnected() {
-        return Uni.createFrom().item(client::getState)
-                .repeat().until(CONNECTED_STATES_CL::contains)
+        return Uni.createFrom().emitter(em -> {
+            waitForIt();
+            em.complete(client.getState());
+        })
                 .ifNoItem().after(Duration.ofSeconds(10)).failWith(TimeoutException::new)
-                .select().last().toUni()
-                .map(_lastUnwantedState -> client.getState())
-                .map(States::name);
+                .map(States.class::cast).map(States::name);
     }
 
     public String sayConnectedS() {
-        if (!CONNECTED_STATES_CL.contains(client.getState())) {
-            waitForIt();
+        var waitTimeout = Instant.now();
+        waitForIt();
+        if (Duration.between(Instant.now(), waitTimeout).abs().getSeconds() > 10) {
+            throw new TimeoutException();
         }
         return client.getState().name();
     }
 
     private synchronized void waitForIt() {
-        try {
-            wait(10_000L);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (!authenticated.get()) {
+            try {
+                wait(15_000L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
