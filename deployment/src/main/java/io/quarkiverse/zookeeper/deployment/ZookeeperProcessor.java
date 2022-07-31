@@ -1,13 +1,11 @@
-package io.quarkiverse.quarkus.zookeeper.deployment;
+package io.quarkiverse.zookeeper.deployment;
 
 import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.zookeeper.ZooKeeper;
 
-import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
-import io.quarkiverse.zookeeper.deployment.ZookeeperRecorder;
-// import io.quarkiverse.quarkus.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
+import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.deployment.Capabilities;

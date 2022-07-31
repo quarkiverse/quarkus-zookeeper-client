@@ -1,4 +1,4 @@
-package io.quarkiverse.quarkus.zookeeper.deployment.config;
+package io.quarkiverse.zookeeper.deployment.config;
 
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;

@@ -1,7 +1,7 @@
-package io.quarkiverse.quarkus.zookeeper.test;
+package io.quarkiverse.zookeeper.deployment;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -41,8 +41,8 @@ public class ZookeeperBasicTest {
     // Using a fixed hostPort to match the config property as defined in the basic-connection.properties
     private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
             .withEnv(Map.of(
-                    "ZOO_AUTOPURGE_PURGEINTERVAL", "10"))
-            .withFixedExposedPort(32181, 2181);
+                    "ZOO_AUTOPURGE_PURGEINTERVAL", "1"))
+            .withFixedExposedPort(12181, 2181);
 
     @BeforeAll
     public static void startZookeeper() {
@@ -58,7 +58,7 @@ public class ZookeeperBasicTest {
     ZooKeeper zk;
 
     @Test
-    void testBasicConnection() throws IOException {
+    void testConfiguration() throws IOException {
 
         assertNotNull(zk);
 

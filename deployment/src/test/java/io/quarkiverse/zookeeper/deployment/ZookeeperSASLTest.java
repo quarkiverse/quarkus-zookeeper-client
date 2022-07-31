@@ -1,4 +1,4 @@
-package io.quarkiverse.quarkus.zookeeper.test;
+package io.quarkiverse.zookeeper.deployment;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,11 +42,11 @@ public class ZookeeperSASLTest {
     // Using a fixed hostPort to match the config property as defined in the basic-connection.properties
     private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
             .withEnv(Map.of(
-                    "ZOO_AUTOPURGE_PURGEINTERVAL", "10",
+                    "ZOO_AUTOPURGE_PURGEINTERVAL", "1",
                     "JVMFLAGS",
                     "-Dzookeeper.superUser=user_su -Dzookeeper.sessionRequireClientSASLAuth=true -Djava.security.auth.login.config=/etc/zookeeper/server_jaas.conf"))
             .withCopyFileToContainer(MountableFile.forClasspathResource("server_jaas.conf"), "/etc/zookeeper/server_jaas.conf")
-            .withFixedExposedPort(42181, 2181);
+            .withFixedExposedPort(32181, 2181);
 
     @BeforeAll
     public static void startZookeeper() {
@@ -62,7 +62,7 @@ public class ZookeeperSASLTest {
     ZooKeeper zk;
 
     @Test
-    void testBasicConnection() throws IOException {
+    void testConfiguration() throws IOException {
 
         assertNotNull(zk);
 

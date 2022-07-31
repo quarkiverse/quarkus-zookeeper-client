@@ -21,7 +21,6 @@ import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
 import io.quarkus.arc.Arc;
 import io.quarkus.arc.InstanceHandle;
 import io.smallrye.health.api.AsyncHealthCheck;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 
@@ -69,6 +68,7 @@ public class ZookeeperReadyCheck implements AsyncHealthCheck {
 
     @Override
     public Uni<HealthCheckResponse> call() {
+        LOG.debug("Testing zookeeper connection");
         HealthCheckResponseBuilder builder = HealthCheckResponse.named("Zookeeper connection health check").up();
         if (checks.isEmpty()) {
             return Uni.createFrom().item(builder.build());
@@ -76,9 +76,8 @@ public class ZookeeperReadyCheck implements AsyncHealthCheck {
 
         var checkList = checks.stream().map(this::checksToUni).collect(toList());
         return Uni.combine().all().unis(checkList)
-                .collectFailures()
                 .combinedWith((var responses) -> combine(responses, builder))
-                .await().indefinitely(); // All checks fail after a timeout, so it won't be forever.
+                .await().indefinitely(); // All checks return within config.client.connectionTimeoutMillis.
     }
 
     @SuppressWarnings("unchecked")
@@ -96,11 +95,9 @@ public class ZookeeperReadyCheck implements AsyncHealthCheck {
 
     private Uni<Tuple2<String, Boolean>> checksToUni(ZKChecks check) {
         return Uni.createFrom().item(check.client::getState)
-                .repeat().until(check.connectedStates::contains)
-                .ifNoItem().after(Duration.ofMillis(check.connectionTimeout))
-                .recoverWithMulti(Multi.createFrom().item(States.NOT_CONNECTED))
-                .map(state -> Tuple2.of(check.name, evalState(check.client, state, check.connectedStates)))
-                .select().last().toUni();
+                .ifNoItem().after(Duration.ofMillis(check.connectionTimeout)).recoverWithItem(States.NOT_CONNECTED)
+                .onFailure().recoverWithItem(States.NOT_CONNECTED)
+                .map(state -> Tuple2.of(check.name, evalState(check.client, state, check.connectedStates)));
     }
 
     private Boolean evalState(ZooKeeper client, States state, Set<States> connectedStates) {
