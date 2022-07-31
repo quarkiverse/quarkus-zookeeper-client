@@ -69,15 +69,14 @@ public class ZookeeperBasicTest {
             if (KeeperState.SyncConnected == event.getState()) {
                 LOG.info("Client connected to zookeeper");
                 connected.compareAndSet(false, true);
-                testCoordinator.arrive();
+                testCoordinator.arriveAndDeregister();
             } else if (KeeperState.Closed == event.getState()) {
                 LOG.info("Client connection closed");
-                testCoordinator.arriveAndDeregister();
             }
         });
 
         assertFalse(connected.get());
-        var testPhase = testCoordinator.arrive();
+        var testPhase = testCoordinator.arriveAndDeregister();
         try {
             testCoordinator.awaitAdvanceInterruptibly(testPhase, 30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {

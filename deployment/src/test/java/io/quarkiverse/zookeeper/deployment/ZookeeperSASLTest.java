@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -41,11 +40,9 @@ public class ZookeeperSASLTest {
     @SuppressWarnings("deprecation")
     // Using a fixed hostPort to match the config property as defined in the basic-connection.properties
     private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
-            .withEnv(Map.of(
-                    "ZOO_AUTOPURGE_PURGEINTERVAL", "1",
-                    "JVMFLAGS",
-                    "-Dzookeeper.superUser=user_su -Dzookeeper.sessionRequireClientSASLAuth=true -Djava.security.auth.login.config=/etc/zookeeper/server_jaas.conf"))
-            .withCopyFileToContainer(MountableFile.forClasspathResource("server_jaas.conf"), "/etc/zookeeper/server_jaas.conf")
+            .withEnv("SERVER_JVMFLAGS", "-Djava.security.auth.login.config=/tmp/server_jaas.conf")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("server_jaas.conf"), "/tmp/server_jaas.conf")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("sasl_zoo.cfg"), "/conf/zoo.cfg")
             .withFixedExposedPort(32181, 2181);
 
     @BeforeAll
@@ -70,18 +67,17 @@ public class ZookeeperSASLTest {
         final AtomicBoolean connected = new AtomicBoolean(false);
         zk.register(event -> {
             LOG.infof("Processing event for state [%s] and type [%s]", event.getState(), event.getType());
-            if (KeeperState.SyncConnected == event.getState()) {
+            if (KeeperState.SaslAuthenticated == event.getState()) {
                 LOG.info("Client connected to zookeeper");
                 connected.compareAndSet(false, true);
-                testCoordinator.arrive();
+                testCoordinator.arriveAndDeregister();
             } else if (KeeperState.Closed == event.getState()) {
                 LOG.info("Client connection closed");
-                testCoordinator.arriveAndDeregister();
             }
         });
 
         assertFalse(connected.get());
-        var testPhase = testCoordinator.arrive();
+        var testPhase = testCoordinator.arriveAndDeregister();
         try {
             testCoordinator.awaitAdvanceInterruptibly(testPhase, 30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
