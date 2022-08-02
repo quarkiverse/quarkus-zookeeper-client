@@ -73,6 +73,9 @@ public class ZookeeperRecorder {
         config.client.auth.configString.map(uncheckedCreateConfigFile)
                 .ifPresent(filePath -> System.setProperty("java.security.auth.login.config", filePath));
 
+        cfg.setProperty(ZKClientConfig.SECURE_CLIENT, String.valueOf(config.client.secure));
+        cfg.setProperty(ZKClientConfig.ZOOKEEPER_CLIENT_CNXN_SOCKET, config.client.clientCnxnSocket);
+
         return cfg;
     }
 

@@ -44,6 +44,28 @@ class ZookeeperProcessor {
                 org.apache.zookeeper.ClientCnxnSocketNetty.class);
     }
 
+    //    @BuildStep
+    //    RuntimeInitializedClassBuildItem addZKLogin() {
+    //        return new RuntimeInitializedClassBuildItem(Login.class.getName());
+    //    }
+
+    // WIP: java.lang.SecurityException: Configuration error: java.lang.ClassNotFoundException: sun.security.provider.ConfigFile
+
+    //    @BuildStep
+    //    NativeImageSecurityProviderBuildItem addSunProvider() {
+    //        return new NativeImageSecurityProviderBuildItem("sun.security.provider.Sun");
+    //    }
+
+    //    @BuildStep
+    //    NativeImageSecurityProviderBuildItem addSunSASLProvider() {
+    //        return new NativeImageSecurityProviderBuildItem("com.sun.security.sasl.Provider");
+    //    }
+
+    //    @BuildStep
+    //    JPMSExportBuildItem exportSecurityPackages() {
+    //        return new JPMSExportBuildItem("java.base", "sun.security.provider");
+    //    }
+
     @BuildStep
     @Record(value = ExecutionTime.RUNTIME_INIT)
     SyntheticBeanBuildItem createZookeeperBean(ZookeeperRecorder recorder,

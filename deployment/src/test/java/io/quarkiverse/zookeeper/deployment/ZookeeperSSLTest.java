@@ -24,12 +24,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.MountableFile;
 
 import io.quarkus.test.QuarkusUnitTest;
 
-public class ZookeeperBasicTest {
+public class ZookeeperSSLTest {
 
-    private static final Logger LOG = Logger.getLogger(ZookeeperBasicTest.class);
+    private static final Logger LOG = Logger.getLogger(ZookeeperSSLTest.class);
+
+    static {
+        System.setProperty("zookeeper.ssl.trustStore.location",
+                MountableFile.forClasspathResource("ks.jks").getFilesystemPath());
+        System.setProperty("zookeeper.ssl.trustStore.password", "changeit");
+    }
 
     // Start unit test with your extension loaded
     @RegisterExtension
@@ -38,11 +45,15 @@ public class ZookeeperBasicTest {
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @SuppressWarnings("deprecation")
-    // Using a fixed hostPort to match the config property as defined in the basic-connection.properties
+    // Using a fixed hostPort to match the config property as defined in the ssl-connection.properties
     private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
             .withEnv(Map.of(
-                    "ZOO_AUTOPURGE_PURGEINTERVAL", "1"))
-            .withFixedExposedPort(12181, 2181);
+                    "ZOO_AUTOPURGE_PURGEINTERVAL", "1",
+                    "SERVER_JVMFLAGS",
+                    "-Dzookeeper.serverCnxnFactory=org.apache.zookeeper.server.NettyServerCnxnFactory -Dzookeeper.ssl.keyStore.location=/tmp/ks.jks -Dzookeeper.ssl.keyStore.password=changeit"))
+            .withCopyFileToContainer(MountableFile.forClasspathResource("ssl_zoo.cfg"), "/conf/zoo.cfg")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("ks.jks"), "/tmp/ks.jks")
+            .withFixedExposedPort(42281, 2281);
 
     @BeforeAll
     public static void startZookeeper() {
@@ -51,6 +62,9 @@ public class ZookeeperBasicTest {
 
     @AfterAll
     public static void stopZookeeper() {
+        System.clearProperty("zookeeper.ssl.trustStore.location");
+        System.clearProperty("zookeeper.ssl.trustStore.password");
+
         ZOOKEEPER.stop();
     }
 
