@@ -54,18 +54,18 @@ public class ZookeeperRecorder {
 
         cfg.setProperty(ZKConfig.JUTE_MAXBUFFER, String.valueOf(config.client.juteMaxBuffer));
         cfg.setProperty(ZKClientConfig.DISABLE_AUTO_WATCH_RESET, String.valueOf(config.client.disableAutowatchReset));
-        cfg.setProperty(ZKClientConfig.ZOOKEEPER_CLIENT_CNXN_SOCKET, String.valueOf(config.client.clientCnxnSocket));
+        cfg.setProperty(ZKClientConfig.ZOOKEEPER_CLIENT_CNXN_SOCKET, config.client.clientCnxnSocket);
         cfg.setProperty(ZKClientConfig.ZOOKEEPER_REQUEST_TIMEOUT, String.valueOf(config.client.requestTimeoutMillis));
 
-        cfg.setProperty(ZKClientConfig.ZK_SASL_CLIENT_USERNAME, String.valueOf(config.client.auth.clientUsername));
+        cfg.setProperty(ZKClientConfig.ZK_SASL_CLIENT_USERNAME, config.client.auth.clientUsername);
         cfg.setProperty(ZKClientConfig.ZK_SASL_CLIENT_CANONICALIZE_HOSTNAME,
                 String.valueOf(config.client.auth.clientCanonicalizeHostname));
-        cfg.setProperty(ZKClientConfig.LOGIN_CONTEXT_NAME_KEY, String.valueOf(config.client.auth.clientconfig));
+        cfg.setProperty(ZKClientConfig.LOGIN_CONTEXT_NAME_KEY, config.client.auth.clientconfig);
         cfg.setProperty(ZKClientConfig.ENABLE_CLIENT_SASL_KEY, String.valueOf(config.client.auth.enabled));
 
-        config.client.auth.serverPrincipal.map(String::valueOf)
+        config.client.auth.serverPrincipal
                 .ifPresent(value -> cfg.setProperty(ZKClientConfig.ZOOKEEPER_SERVER_PRINCIPAL, value));
-        config.client.auth.serverRealm.map(String::valueOf)
+        config.client.auth.serverRealm
                 .ifPresent(value -> cfg.setProperty(ZKClientConfig.ZOOKEEPER_SERVER_REALM, value));
 
         var uncheckedCreateConfigFile = Unchecked
@@ -74,7 +74,6 @@ public class ZookeeperRecorder {
                 .ifPresent(filePath -> System.setProperty("java.security.auth.login.config", filePath));
 
         cfg.setProperty(ZKClientConfig.SECURE_CLIENT, String.valueOf(config.client.secure));
-        cfg.setProperty(ZKClientConfig.ZOOKEEPER_CLIENT_CNXN_SOCKET, config.client.clientCnxnSocket);
 
         return cfg;
     }

@@ -34,7 +34,7 @@ public class ZookeeperBasicTest {
     // Start unit test with your extension loaded
     @RegisterExtension
     static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
-            .withConfigurationResource("ssl-connection.properties")
+            .withConfigurationResource("basic-connection.properties")
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class));
 
     @SuppressWarnings("deprecation")
