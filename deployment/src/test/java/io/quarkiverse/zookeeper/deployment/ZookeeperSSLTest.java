@@ -33,9 +33,9 @@ public class ZookeeperSSLTest {
     private static final Logger LOG = Logger.getLogger(ZookeeperSSLTest.class);
 
     static {
-        System.setProperty("zookeeper.ssl.trustStore.location",
+
+        System.setProperty("quarkus.zookeeper.client.ssl.trust-store-location",
                 MountableFile.forClasspathResource("ks.jks").getFilesystemPath());
-        System.setProperty("zookeeper.ssl.trustStore.password", "changeit");
     }
 
     // Start unit test with your extension loaded

@@ -17,6 +17,12 @@ public class ClientConfig {
     public SaslConfig auth;
 
     /**
+     * Client confidentiality
+     */
+    @ConfigItem
+    public SecureClientConfig ssl;
+
+    /**
      * Connection timeout in millis.
      */
     @ConfigItem(defaultValue = CONNECTION_TIMEOUT_DEFAULT, defaultValueDocumentation = CONNECTION_TIMEOUT_DEFAULT)

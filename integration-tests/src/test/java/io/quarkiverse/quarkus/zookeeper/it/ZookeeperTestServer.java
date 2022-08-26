@@ -12,9 +12,8 @@ public class ZookeeperTestServer implements QuarkusTestResourceLifecycleManager 
 
     // In addition to %test profile in the application.properties file
     static {
-        System.setProperty("zookeeper.ssl.trustStore.location",
+        System.setProperty("quarkus.zookeeper.client.ssl.trust-store-location",
                 MountableFile.forClasspathResource("ks.jks").getFilesystemPath());
-        System.setProperty("zookeeper.ssl.trustStore.password", "changeit");
     }
 
     private static final GenericContainer<?> ZOOKEEPER = new GenericContainer<>(DockerImageName.parse("zookeeper:3.8.0"))
