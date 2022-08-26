@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
+import org.apache.zookeeper.Environment;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.client.ZKClientConfig;
 import org.apache.zookeeper.common.ClientX509Util;
@@ -72,7 +73,7 @@ public class ZookeeperRecorder {
         var uncheckedCreateConfigFile = Unchecked
                 .function((String value) -> createConfigFile(config.client.auth.clientconfig, value));
         config.client.auth.configString.map(uncheckedCreateConfigFile)
-                .ifPresent(filePath -> System.setProperty("java.security.auth.login.config", filePath));
+                .ifPresent(filePath -> System.setProperty(Environment.JAAS_CONF_KEY, filePath));
 
         try (var x509Util = new ClientX509Util()) {
             cfg.setProperty(ZKClientConfig.SECURE_CLIENT, String.valueOf(config.client.secure));

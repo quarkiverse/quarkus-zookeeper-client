@@ -32,8 +32,8 @@ public class ZookeeperSSLTest {
 
     private static final Logger LOG = Logger.getLogger(ZookeeperSSLTest.class);
 
+    // In addition to %test profile in the application.properties file
     static {
-
         System.setProperty("quarkus.zookeeper.client.ssl.trust-store-location",
                 MountableFile.forClasspathResource("ks.jks").getFilesystemPath());
     }
@@ -62,10 +62,8 @@ public class ZookeeperSSLTest {
 
     @AfterAll
     public static void stopZookeeper() {
-        System.clearProperty("zookeeper.ssl.trustStore.location");
-        System.clearProperty("zookeeper.ssl.trustStore.password");
-
         ZOOKEEPER.stop();
+        System.clearProperty("quarkus.zookeeper.client.ssl.trust-store-location");
     }
 
     @Inject

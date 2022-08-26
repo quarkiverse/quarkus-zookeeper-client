@@ -2,6 +2,7 @@ package io.quarkiverse.zookeeper.deployment;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.apache.zookeeper.Login;
 import org.apache.zookeeper.ZooKeeper;
 
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
@@ -15,7 +16,10 @@ import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.JPMSExportBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.NativeImageSecurityProviderBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 
 class ZookeeperProcessor {
@@ -44,10 +48,21 @@ class ZookeeperProcessor {
                 org.apache.zookeeper.ClientCnxnSocketNetty.class);
     }
 
-    //    @BuildStep
-    //    RuntimeInitializedClassBuildItem addZKLogin() {
-    //        return new RuntimeInitializedClassBuildItem(Login.class.getName());
-    //    }
+//    @BuildStep
+//    ReflectiveClassBuildItem addAuthRelatidReflectiveRquirements() {
+//        return new ReflectiveClassBuildItem(false, false,
+//                org.apache.zookeeper.server.auth.DigestLoginModule.class);
+//    }
+
+    @BuildStep
+    NativeImageSecurityProviderBuildItem addSunSASLProvider() {
+        return new NativeImageSecurityProviderBuildItem("com.sun.security.sasl.Provider");
+    }
+
+    @BuildStep
+    RuntimeInitializedClassBuildItem addZKLogin() {
+        return new RuntimeInitializedClassBuildItem(Login.class.getName());
+    }
 
     // WIP: java.lang.SecurityException: Configuration error: java.lang.ClassNotFoundException: sun.security.provider.ConfigFile
 
@@ -56,15 +71,10 @@ class ZookeeperProcessor {
     //        return new NativeImageSecurityProviderBuildItem("sun.security.provider.Sun");
     //    }
 
-    //    @BuildStep
-    //    NativeImageSecurityProviderBuildItem addSunSASLProvider() {
-    //        return new NativeImageSecurityProviderBuildItem("com.sun.security.sasl.Provider");
-    //    }
-
-    //    @BuildStep
-    //    JPMSExportBuildItem exportSecurityPackages() {
-    //        return new JPMSExportBuildItem("java.base", "sun.security.provider");
-    //    }
+//    @BuildStep
+//    JPMSExportBuildItem exportSecurityPackages() {
+//        return new JPMSExportBuildItem("java.base", "sun.security.provider");
+//    }
 
     @BuildStep
     @Record(value = ExecutionTime.RUNTIME_INIT)
