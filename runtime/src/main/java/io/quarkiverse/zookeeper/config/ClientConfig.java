@@ -66,4 +66,12 @@ public class ClientConfig {
      */
     @ConfigItem(defaultValue = "1048575", defaultValueDocumentation = "1048575")
     public int juteMaxBuffer;
+
+    @Override
+    public String toString() {
+        return "ClientConfig [auth=" + auth + ", ssl=" + ssl + ", connectionTimeoutMillis=" + connectionTimeoutMillis
+                + ", requestTimeoutMillis=" + requestTimeoutMillis + ", disableAutowatchReset=" + disableAutowatchReset
+                + ", secure=" + secure + ", clientCnxnSocket=" + clientCnxnSocket + ", juteMaxBuffer=" + juteMaxBuffer
+                + "]";
+    }
 }

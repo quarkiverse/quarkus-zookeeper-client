@@ -61,4 +61,11 @@ public class SaslConfig {
      */
     @ConfigItem
     public Optional<String> serverRealm;
+
+    @Override
+    public String toString() {
+        return "SaslConfig [enabled=" + enabled + ", clientconfig=" + clientconfig + ", configString=" + configString
+                + ", serverPrincipal=" + serverPrincipal + ", clientUsername=" + clientUsername
+                + ", clientCanonicalizeHostname=" + clientCanonicalizeHostname + ", serverRealm=" + serverRealm + "]";
+    }
 }

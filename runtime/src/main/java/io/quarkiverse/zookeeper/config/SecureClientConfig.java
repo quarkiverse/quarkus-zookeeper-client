@@ -45,4 +45,12 @@ public class SecureClientConfig {
      */
     @ConfigItem
     public Optional<String> trustStoreType;
+
+    @Override
+    public String toString() {
+        return "SecureClientConfig [keyStoreLocation=" + keyStoreLocation + ", keyStorePassword=" + keyStorePassword
+                + ", trustStoreLocation=" + trustStoreLocation + ", trustStorePassword=" + trustStorePassword
+                + ", keyStoreType=" + keyStoreType + ", trustStoreType=" + trustStoreType + "]";
+    }
+
 }

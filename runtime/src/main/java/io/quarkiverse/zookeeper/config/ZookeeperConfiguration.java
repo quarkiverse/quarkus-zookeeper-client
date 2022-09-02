@@ -26,4 +26,10 @@ public class ZookeeperConfiguration {
      */
     @ConfigItem(name = "health.enabled", defaultValue = "true", defaultValueDocumentation = "true")
     public boolean healthEnabled;
+
+    @Override
+    public String toString() {
+        return "ZookeeperConfiguration [client=" + client + ", session=" + session + ", healthEnabled=" + healthEnabled
+                + "]";
+    }
 }

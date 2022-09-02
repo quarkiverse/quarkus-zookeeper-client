@@ -30,4 +30,10 @@ public class SessionConfig {
      */
     @ConfigItem(defaultValue = "false", defaultValueDocumentation = "false")
     public boolean canBeReadOnly;
+
+    @Override
+    public String toString() {
+        return "SessionConfig [connectionString=" + connectionString + ", timeout=" + timeout + ", canBeReadOnly="
+                + canBeReadOnly + "]";
+    }
 }

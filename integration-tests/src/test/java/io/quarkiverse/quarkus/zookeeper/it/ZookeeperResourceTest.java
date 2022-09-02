@@ -24,12 +24,12 @@ class ZookeeperResourceTest {
                 .body(is(States.CONNECTED.name()));
     }
 
-    @Test
-    void testImperativeEndpoint() {
-        given()
-                .when().get("/imperative")
-                .then()
-                .statusCode(200)
-                .body(is(States.CONNECTED.name()));
-    }
+    //    @Test
+    //    void testImperativeEndpoint() {
+    //        given()
+    //                .when().get("/imperative")
+    //                .then()
+    //                .statusCode(200)
+    //                .body(is(States.CONNECTED.name()));
+    //    }
 }
