@@ -3,6 +3,7 @@ package io.quarkiverse.zookeeper.deployment;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import org.apache.zookeeper.Environment;
@@ -73,7 +74,7 @@ public class ZookeeperRecorder {
         var uncheckedCreateConfigFile = Unchecked
                 .function((String value) -> createConfigFile(config.client.auth.clientconfig, value));
         config.client.auth.configString.map(uncheckedCreateConfigFile)
-                .ifPresent(filePath -> System.setProperty(Environment.JAAS_CONF_KEY, filePath));
+                .ifPresent(filePath -> System.setProperty(Environment.JAAS_CONF_KEY, String.valueOf(filePath)));
 
         try (var x509Util = new ClientX509Util()) {
             cfg.setProperty(ZKClientConfig.SECURE_CLIENT, String.valueOf(config.client.secure));
@@ -94,12 +95,12 @@ public class ZookeeperRecorder {
         return cfg;
     }
 
-    private String createConfigFile(String clientconfig, String value) throws IOException {
+    private Path createConfigFile(String clientconfig, String value) throws IOException {
         var content = String.format("%s { %s };", clientconfig, value);
         var jaasFile = File.createTempFile("jaas", ".conf");
         jaasFile.deleteOnExit();
 
         return Files.writeString(jaasFile.toPath(), content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
-                .toAbsolutePath().toString();
+                .toAbsolutePath();
     }
 }

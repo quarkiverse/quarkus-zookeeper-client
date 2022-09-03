@@ -16,6 +16,7 @@ import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.NativeImageSecurityProviderBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
@@ -40,39 +41,27 @@ class ZookeeperProcessor {
     }
 
     @BuildStep
-    ReflectiveClassBuildItem addClientSocket() {
-        return new ReflectiveClassBuildItem(false, false,
+    ReflectiveClassBuildItem addReflectiveZKClasses() {
+        return new ReflectiveClassBuildItem(true, false, false,
                 org.apache.zookeeper.ClientCnxnSocketNIO.class,
-                org.apache.zookeeper.ClientCnxnSocketNetty.class);
+                org.apache.zookeeper.ClientCnxnSocketNetty.class,
+                org.apache.zookeeper.server.auth.DigestLoginModule.class);
     }
 
-    //    @BuildStep
-    //    NativeImageSecurityProviderBuildItem addSunSASLProvider() {
-    //        return new NativeImageSecurityProviderBuildItem("com.sun.security.sasl.Provider");
-    //    }
+    @BuildStep
+    ReflectiveClassBuildItem addReflectiveProviderClasses() {
+        return new ReflectiveClassBuildItem(true, false, false,
+                "sun.security.provider.ConfigFile");
+    }
 
-    //    @BuildStep
-    //    NativeImageSecurityProviderBuildItem addSunJGSSProvider() {
-    //        return new NativeImageSecurityProviderBuildItem("sun.security.jgss.SunProvider");
-    //    }
+    @BuildStep
+    NativeImageSecurityProviderBuildItem addSunSASLProvider() {
+        return new NativeImageSecurityProviderBuildItem("com.sun.security.sasl.Provider");
+    }
 
     @BuildStep
     RuntimeInitializedClassBuildItem addZKLogin() {
         return new RuntimeInitializedClassBuildItem(Login.class.getName());
-    }
-
-    //    2022-08-27 01:35:17,382 WARN  [org.apa.zoo.ClientCnxn] (main-SendThread(localhost:49400)) SASL configuration failed. Will continue connection to Zookeeper server without SASL authentication, if Zookeeper server allows it.: javax.security.auth.login.LoginException: Zookeeper client cannot authenticate using the Client section of the supplied JAAS configuration: '/tmp/jaas6839116132956926788.conf' because of a RuntimeException: java.lang.SecurityException: Configuration error: java.lang.ClassNotFoundException: sun.security.provider.ConfigFile
-    //
-    //    at org.apache.zookeeper.client.ZooKeeperSaslClient.<init>(ZooKeeperSaslClient.java:152)
-    //    at org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:1151)
-    //    at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1200)
-    //    at com.oracle.svm.core.thread.JavaThreads.threadStartRoutine(JavaThreads.java:600)
-    //    at com.oracle.svm.core.posix.thread.PosixJavaThreads.pthreadStartRoutine(PosixJavaThreads.java:192)
-
-    @BuildStep
-    ReflectiveClassBuildItem addAuthRelatidReflectiveRquirements() {
-        return new ReflectiveClassBuildItem(false, false,
-                org.apache.zookeeper.server.auth.DigestLoginModule.class);
     }
 
     // WIP: java.lang.SecurityException: Configuration error: java.lang.ClassNotFoundException: sun.security.provider.ConfigFile
