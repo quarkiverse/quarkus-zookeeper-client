@@ -38,7 +38,7 @@
             </goals>
             <configuration>
           <capabilities>
-            <provides>io.quarkus.zookeeper</provides>
+            <provides>io.quarkus.zookeeper.client</provides>
           </capabilities>
               <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}</deployment>
             </configuration>
