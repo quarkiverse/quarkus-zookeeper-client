@@ -22,7 +22,7 @@ public class SaslConfig {
 
     /**
      * SALS client configuration string, e.g.
-     * 
+     *
      * <pre>
      * org.apache.zookeeper.server.auth.DigestLoginModule required username="test" password="passwd";
      * </pre>
