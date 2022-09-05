@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "morphy76",
+      "name": "Riccardo Pasquini",
+      "avatar_url": "https://avatars.githubusercontent.com/u/987000?v=4",
+      "profile": "https://github.com/morphy76",
+      "contributions": [
+        "code",
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "quarkus-zookeeper-client",
+  "projectOwner": "quarkiverse",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
