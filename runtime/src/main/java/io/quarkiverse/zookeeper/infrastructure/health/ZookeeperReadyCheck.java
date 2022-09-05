@@ -76,12 +76,11 @@ public class ZookeeperReadyCheck implements AsyncHealthCheck {
 
         var checkList = checks.stream().map(this::checksToUni).collect(toList());
         return Uni.combine().all().unis(checkList)
-                .combinedWith((var responses) -> combine(responses, builder))
-                .await().indefinitely(); // All checks return within config.client.connectionTimeoutMillis.
+                .combinedWith((var responses) -> combine(responses, builder));
     }
 
     @SuppressWarnings("unchecked")
-    private Uni<HealthCheckResponse> combine(List<?> responses, HealthCheckResponseBuilder builder) {
+    private HealthCheckResponse combine(List<?> responses, HealthCheckResponseBuilder builder) {
         for (var response : responses) {
             Tuple2<String, Boolean> useResponse = (Tuple2<String, Boolean>) response;
             if (useResponse.getItem2().booleanValue()) {
@@ -90,7 +89,7 @@ public class ZookeeperReadyCheck implements AsyncHealthCheck {
                 builder.down().withData(useResponse.getItem1(), useResponse.getItem2());
             }
         }
-        return Uni.createFrom().item(builder.build());
+        return builder.build();
     }
 
     private Uni<Tuple2<String, Boolean>> checksToUni(ZKChecks check) {
