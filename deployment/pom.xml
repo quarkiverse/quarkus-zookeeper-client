@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>io.quarkiverse.quarkus-zookeeper</groupId>
 		<artifactId>quarkus-zookeeper-parent</artifactId>
-		<version>999-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>quarkus-zookeeper-deployment</artifactId>
 	<name>Quarkus - Zookeeper - Deployment</name>

@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>io.quarkiverse.quarkus-zookeeper</groupId>
 	<artifactId>quarkus-zookeeper-parent</artifactId>
-	<version>999-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Quarkus - Zookeeper - Parent</name>
 	<modules>
@@ -31,7 +31,7 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>io.quarkus.platform</groupId>
+				<groupId>io.quarkus</groupId>
 				<artifactId>quarkus-bom</artifactId>
 				<version>${quarkus.version}</version>
 				<type>pom</type>
