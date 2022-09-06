@@ -1,7 +1,9 @@
 = Quarkus - Zookeeper
-:extension-status: preview
+:extension-status: dev
 
-Describe what the extension does here.
+Stateful client to Apache Zookeeper (https://zookeeper.apache.org/).
+
+ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
 
 == Installation
 
@@ -15,6 +17,27 @@ In your `pom.xml` file, add:
     <artifactId>quarkus-zookeeper</artifactId>
 </dependency>
 ----
+
+== Usage
+
+This extension produces an application scoped bean for the ZooKeeper client, which can be directly injected into a managed bean:
+
+[source,java]
+----
+@ApplicationScoped
+public class ZookeeperService implements AsyncObserverExceptionHandler {
+    
+    private static final Logger LOG = Logger.getLogger(ZookeeperService.class);
+    
+    @Inject ZooKeeper client;
+    
+    public void onZKEvent(@ObservesAsync WatchedEvent event) {
+        LOG.infof("Receiving [%s]", event.getState());
+    }
+}
+----
+
+As shown by the example, it also provides a binding between ZooKeeper watched events and an asynch CDI bus.
 
 [[extension-configuration-reference]]
 == Extension Configuration Reference

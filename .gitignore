@@ -1,4 +1,5 @@
 .apt_generated
+.asciidoctorconfig.adoc
 
 # Compiled class file
 *.class
