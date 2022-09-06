@@ -1,0 +1,23 @@
+
+:summaryTableId: quarkus-zookeeper-io-quarkiverse-zookeeper-deployment-config-zookeeper-build-time-configuration
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[quarkus-zookeeper-io-quarkiverse-zookeeper-deployment-config-zookeeper-build-time-configuration_configuration]]link:#quarkus-zookeeper-io-quarkiverse-zookeeper-deployment-config-zookeeper-build-time-configuration_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[quarkus-zookeeper-io-quarkiverse-zookeeper-deployment-config-zookeeper-build-time-configuration_quarkus.zookeeper.health.enabled]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-deployment-config-zookeeper-build-time-configuration_quarkus.zookeeper.health.enabled[quarkus.zookeeper.health.enabled]`
+
+[.description]
+--
+Whether to enable health checks.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_HEALTH_ENABLED+++`
+--|boolean 
+|`true`
+
+|===

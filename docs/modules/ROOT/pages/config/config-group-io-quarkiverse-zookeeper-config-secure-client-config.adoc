@@ -1,0 +1,78 @@
+
+:summaryTableId: config-group-io-quarkiverse-zookeeper-config-secure-client-config
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-quarkiverse-zookeeper-config-secure-client-config_configuration]]link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a| [[config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.key-store-location]]`link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.key-store-location[quarkus.zookeeper.client.ssl.key-store-location]`
+
+[.description]
+--
+Specifies the file path to a JKS containing the local credentials to be used for SSL connections.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_KEY_STORE_LOCATION+++`
+--|string 
+|
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.key-store-password]]`link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.key-store-password[quarkus.zookeeper.client.ssl.key-store-password]`
+
+[.description]
+--
+Specifies the password to unlock the file.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_KEY_STORE_PASSWORD+++`
+--|string 
+|
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.trust-store-location]]`link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.trust-store-location[quarkus.zookeeper.client.ssl.trust-store-location]`
+
+[.description]
+--
+Specifies the file path to a JKS containing the remote credentials to be used for SSL connections.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_TRUST_STORE_LOCATION+++`
+--|string 
+|
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.trust-store-password]]`link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.trust-store-password[quarkus.zookeeper.client.ssl.trust-store-password]`
+
+[.description]
+--
+Specifies the password to unlock the file.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_TRUST_STORE_PASSWORD+++`
+--|string 
+|
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.key-store-type]]`link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.key-store-type[quarkus.zookeeper.client.ssl.key-store-type]`
+
+[.description]
+--
+Specifies the file format of keys store files used to establish TLS connection to the ZooKeeper server. Values: JKS, PEM, PKCS12 or null.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_KEY_STORE_TYPE+++`
+--|string 
+|
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.trust-store-type]]`link:#config-group-io-quarkiverse-zookeeper-config-secure-client-config_quarkus.zookeeper.client.ssl.trust-store-type[quarkus.zookeeper.client.ssl.trust-store-type]`
+
+[.description]
+--
+Specifies the file format of trust store files used to establish TLS connection to the ZooKeeper server. Values: JKS, PEM, PKCS12 or null.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_TRUST_STORE_TYPE+++`
+--|string 
+|
+
+|===

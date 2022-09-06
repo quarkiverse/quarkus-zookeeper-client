@@ -4,6 +4,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![Build](<https://img.shields.io/github/workflow/status/quarkiverse/quarkus-zookeeper-client/Build?logo=GitHub&style=flat-square>)](https://github.com/quarkiverse/quarkus-zookeeper-client/actions?query=workflow%3ABuild)
+[![Maven Central](https://img.shields.io/maven-central/v/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper.svg?label=Maven%20Central&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 
 Stateful client to Apache Zookeeper (https://zookeeper.apache.org/).
@@ -12,7 +13,7 @@ ZooKeeper is a centralized service for maintaining configuration information, na
 
 ## Documentation
 
-WIP
+See https://quarkiverse.github.io/quarkiverse-docs/quarkus-zookeeper/dev/index.html
 
 ## Contributors ✨
 

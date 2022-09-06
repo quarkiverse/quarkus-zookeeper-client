@@ -42,4 +42,4 @@ As shown by the example, it also provides a binding between ZooKeeper watched ev
 [[extension-configuration-reference]]
 == Extension Configuration Reference
 
-include::config.adoc[leveloffset=+1, opts=optional]
+include::config/quarkus-zookeeper.adoc[leveloffset=+1, opts=optional]

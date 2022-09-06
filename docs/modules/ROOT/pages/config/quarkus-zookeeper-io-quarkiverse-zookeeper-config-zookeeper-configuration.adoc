@@ -1,0 +1,265 @@
+
+:summaryTableId: quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_configuration]]link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.sasl.enabled]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.sasl.enabled[quarkus.zookeeper.client.auth.sasl.enabled]`
+
+[.description]
+--
+Set the value to true to enable SASL authentication.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_SASL_ENABLED+++`
+--|boolean 
+|`false`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.clientconfig]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.clientconfig[quarkus.zookeeper.client.auth.clientconfig]`
+
+[.description]
+--
+Specifies the context key in the JAAS login file.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_CLIENTCONFIG+++`
+--|string 
+|`Client`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.sasl.config-string]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.sasl.config-string[quarkus.zookeeper.client.auth.sasl.config-string]`
+
+[.description]
+--
+SALS client configuration string, e.g. org.apache.zookeeper.server.auth.DigestLoginModule required username="test" password="passwd";
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_SASL_CONFIG_STRING+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.server-principal]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.server-principal[quarkus.zookeeper.client.auth.server-principal]`
+
+[.description]
+--
+Specifies the server principal to be used by the client for authentication, while connecting to the zookeeper server, when Kerberos authentication is enabled. If this configuration is provided, then the ZooKeeper client will NOT USE any of the following parameters to determine the server principal: zookeeper.sasl.client.username, zookeeper.sasl.client.canonicalize.hostname, zookeeper.server.realm.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_SERVER_PRINCIPAL+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.client-username]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.client-username[quarkus.zookeeper.client.auth.client-username]`
+
+[.description]
+--
+Traditionally, a principal is divided into three parts: the primary, the instance, and the realm. The format of a typical Kerberos V5 principal is primary/instance@REALM. zookeeper.sasl.client.username specifies the primary part of the server principal.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_CLIENT_USERNAME+++`
+--|string 
+|`zookeeper`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.client-canonicalize-hostname]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.client-canonicalize-hostname[quarkus.zookeeper.client.auth.client-canonicalize-hostname]`
+
+[.description]
+--
+Expecting the zookeeper.server.principal parameter is not provided, the ZooKeeper client will try to determine the 'instance' (host) part of the ZooKeeper server principal. First it takes the hostname provided as the ZooKeeper server connection string. Then it tries to 'canonicalize' the address by getting the fully qualified domain name belonging to the address. You can disable this 'canonicalization' by setting: zookeeper.sasl.client.canonicalize.hostname=false.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_CLIENT_CANONICALIZE_HOSTNAME+++`
+--|boolean 
+|`true`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.server-realm]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.auth.server-realm[quarkus.zookeeper.client.auth.server-realm]`
+
+[.description]
+--
+Realm part of the server principal. By default it is the client principal realm.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_AUTH_SERVER_REALM+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.key-store-location]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.key-store-location[quarkus.zookeeper.client.ssl.key-store-location]`
+
+[.description]
+--
+Specifies the file path to a JKS containing the local credentials to be used for SSL connections.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_KEY_STORE_LOCATION+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.key-store-password]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.key-store-password[quarkus.zookeeper.client.ssl.key-store-password]`
+
+[.description]
+--
+Specifies the password to unlock the file.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_KEY_STORE_PASSWORD+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.trust-store-location]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.trust-store-location[quarkus.zookeeper.client.ssl.trust-store-location]`
+
+[.description]
+--
+Specifies the file path to a JKS containing the remote credentials to be used for SSL connections.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_TRUST_STORE_LOCATION+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.trust-store-password]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.trust-store-password[quarkus.zookeeper.client.ssl.trust-store-password]`
+
+[.description]
+--
+Specifies the password to unlock the file.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_TRUST_STORE_PASSWORD+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.key-store-type]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.key-store-type[quarkus.zookeeper.client.ssl.key-store-type]`
+
+[.description]
+--
+Specifies the file format of keys store files used to establish TLS connection to the ZooKeeper server. Values: JKS, PEM, PKCS12 or null.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_KEY_STORE_TYPE+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.trust-store-type]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.ssl.trust-store-type[quarkus.zookeeper.client.ssl.trust-store-type]`
+
+[.description]
+--
+Specifies the file format of trust store files used to establish TLS connection to the ZooKeeper server. Values: JKS, PEM, PKCS12 or null.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SSL_TRUST_STORE_TYPE+++`
+--|string 
+|
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.connection-timeout-millis]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.connection-timeout-millis[quarkus.zookeeper.client.connection-timeout-millis]`
+
+[.description]
+--
+Connection timeout in millis.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_CONNECTION_TIMEOUT_MILLIS+++`
+--|int 
+|`30000`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.request-timeout-millis]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.request-timeout-millis[quarkus.zookeeper.client.request-timeout-millis]`
+
+[.description]
+--
+Request timeout in millis.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_REQUEST_TIMEOUT_MILLIS+++`
+--|int 
+|`5000`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.disable-autowatch-reset]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.disable-autowatch-reset[quarkus.zookeeper.client.disable-autowatch-reset]`
+
+[.description]
+--
+This switch controls whether automatic watch resetting is enabled. Clients automatically reset watches during session reconnect by default, this option allows the client to turn off this behavior by setting zookeeper.disableAutoWatchReset to true.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_DISABLE_AUTOWATCH_RESET+++`
+--|boolean 
+|`false`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.secure]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.secure[quarkus.zookeeper.client.secure]`
+
+[.description]
+--
+If you want to connect to the server secure client port, you need to set this property to true on the client. This will connect to server using SSL with specified credentials. Note that it requires the Netty client.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_SECURE+++`
+--|boolean 
+|`false`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.client-cnxn-socket]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.client-cnxn-socket[quarkus.zookeeper.client.client-cnxn-socket]`
+
+[.description]
+--
+Specifies which ClientCnxnSocket to be used. Possible values are org.apache.zookeeper.ClientCnxnSocketNIO and org.apache.zookeeper.ClientCnxnSocketNetty . Default is org.apache.zookeeper.ClientCnxnSocketNIO . If you want to connect to server's secure client port, you need to set this property to org.apache.zookeeper.ClientCnxnSocketNetty on client.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_CLIENT_CNXN_SOCKET+++`
+--|string 
+|`org.apache.zookeeper.ClientCnxnSocketNIO`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.jute-max-buffer]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.client.jute-max-buffer[quarkus.zookeeper.client.jute-max-buffer]`
+
+[.description]
+--
+In the client side, it specifies the maximum size of the incoming data from the server. The default is 0xfffff(1048575) bytes, or just under 1M. This is really a sanity check. The ZooKeeper server is designed to store and send data on the order of kilobytes. If incoming data length is more than this value, an IOException is raised. This value of client side should keep same with the server side(Setting System.setProperty("jute.maxbuffer", "xxxx") in the client side will work), otherwise problems will arise.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_CLIENT_JUTE_MAX_BUFFER+++`
+--|int 
+|`1048575`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.session.connection-string]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.session.connection-string[quarkus.zookeeper.session.connection-string]`
+
+[.description]
+--
+Comma separated host:port pairs, each corresponding to a zk server.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_CONNECTION_STRING+++`
+--|string 
+|required icon:exclamation-circle[title=Configuration property is required]
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.session.timeout]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.session.timeout[quarkus.zookeeper.session.timeout]`
+
+[.description]
+--
+Session timeout in milliseconds.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_TIMEOUT+++`
+--|int 
+|`30000`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.session.can-be-read-only]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.session.can-be-read-only[quarkus.zookeeper.session.can-be-read-only]`
+
+[.description]
+--
+Whether the created client is allowed to go to read-only mode in case of partitioning. Read-only mode basically means that if the client can't find any majority servers but there's partitioned server it could reach, it connects to one in read-only mode.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_CAN_BE_READ_ONLY+++`
+--|boolean 
+|`false`
+
+
+a| [[quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.health.enabled]]`link:#quarkus-zookeeper-io-quarkiverse-zookeeper-config-zookeeper-configuration_quarkus.zookeeper.health.enabled[quarkus.zookeeper.health.enabled]`
+
+[.description]
+--
+Whether to enable health checks.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_HEALTH_ENABLED+++`
+--|boolean 
+|`true`
+
+|===

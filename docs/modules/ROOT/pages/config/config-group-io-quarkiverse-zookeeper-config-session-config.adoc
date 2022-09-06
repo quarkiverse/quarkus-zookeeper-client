@@ -1,0 +1,45 @@
+
+:summaryTableId: config-group-io-quarkiverse-zookeeper-config-session-config
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-quarkiverse-zookeeper-config-session-config_configuration]]link:#config-group-io-quarkiverse-zookeeper-config-session-config_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a| [[config-group-io-quarkiverse-zookeeper-config-session-config_quarkus.zookeeper.session.connection-string]]`link:#config-group-io-quarkiverse-zookeeper-config-session-config_quarkus.zookeeper.session.connection-string[quarkus.zookeeper.session.connection-string]`
+
+[.description]
+--
+Comma separated host:port pairs, each corresponding to a zk server.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_CONNECTION_STRING+++`
+--|string 
+|required icon:exclamation-circle[title=Configuration property is required]
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-session-config_quarkus.zookeeper.session.timeout]]`link:#config-group-io-quarkiverse-zookeeper-config-session-config_quarkus.zookeeper.session.timeout[quarkus.zookeeper.session.timeout]`
+
+[.description]
+--
+Session timeout in milliseconds.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_TIMEOUT+++`
+--|int 
+|`30000`
+
+
+a| [[config-group-io-quarkiverse-zookeeper-config-session-config_quarkus.zookeeper.session.can-be-read-only]]`link:#config-group-io-quarkiverse-zookeeper-config-session-config_quarkus.zookeeper.session.can-be-read-only[quarkus.zookeeper.session.can-be-read-only]`
+
+[.description]
+--
+Whether the created client is allowed to go to read-only mode in case of partitioning. Read-only mode basically means that if the client can't find any majority servers but there's partitioned server it could reach, it connects to one in read-only mode.
+
+Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_CAN_BE_READ_ONLY+++`
+--|boolean 
+|`false`
+
+|===
