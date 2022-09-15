@@ -1,4 +1,4 @@
-= Quarkus - Zookeeper
+= Quarkus - Zookeeper Client
 :extension-status: dev
 
 Stateful client to Apache Zookeeper (https://zookeeper.apache.org/).
