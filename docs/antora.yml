@@ -1,5 +1,5 @@
-name: quarkus-zookeeper
-title: Quarkus - Zookeeper
+name: quarkus-zookeeper-client
+title: Quarkus Zookeeper Client
 version: dev
 nav:
   - modules/ROOT/nav.adoc
