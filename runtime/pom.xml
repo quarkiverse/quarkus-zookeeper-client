@@ -38,6 +38,10 @@
 						<configuration>
 							<capabilities>
 								<provides>io.quarkus.zookeeper.client</provides>
+								<providesIf>
+									<positive>io.quarkiverse.zookeeper.deployment.capabilities.GroupMembershipSupplier</positive>
+									<name>io.quarkus.zookeeper.membership</name>
+								</providesIf>
 							</capabilities>
 							<deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}</deployment>
 						</configuration>
