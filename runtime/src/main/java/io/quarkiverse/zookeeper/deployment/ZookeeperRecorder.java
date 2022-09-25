@@ -39,7 +39,7 @@ public class ZookeeperRecorder {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        shutdownContext.addShutdownTask(() -> {
+        shutdownContext.addLastShutdownTask(() -> {
             try {
                 rv.close(config.session.timeout);
             } catch (InterruptedException e) {
