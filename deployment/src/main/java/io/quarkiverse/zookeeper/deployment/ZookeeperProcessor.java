@@ -8,8 +8,10 @@ import org.apache.zookeeper.Login;
 import org.apache.zookeeper.ZooKeeper;
 
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
+import io.quarkiverse.zookeeper.deployment.capabilities.GroupMembershipSupplier;
 import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
-import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
+import io.quarkiverse.zookeeper.health.infrastructure.ZookeeperReadyCheck;
+import io.quarkiverse.zookeeper.membership.model.GroupMembership;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.bootstrap.model.AppArtifactKey;
 import io.quarkus.deployment.Capabilities;
@@ -39,6 +41,16 @@ class ZookeeperProcessor {
         if (capabilities.isPresent(Capability.SMALLRYE_HEALTH)) {
             return new HealthBuildItem(ZookeeperReadyCheck.class.getName(),
                     config.healthEnabled);
+        } else {
+            return null;
+        }
+    }
+
+    @BuildStep(onlyIf = GroupMembershipSupplier.class)
+    HealthBuildItem addGroupMembershipReadiness(ZookeeperBuildTimeConfiguration config) {
+        // TODO
+        if (config.membership.enable) {
+            return null;
         } else {
             return null;
         }
@@ -84,6 +96,24 @@ class ZookeeperProcessor {
                 .configure(ZooKeeper.class)
                 .scope(ApplicationScoped.class)
                 .runtimeValue(zk)
+                .setRuntimeInit()
+                .unremovable()
+                .done();
+    }
+
+    @BuildStep(onlyIf = GroupMembershipSupplier.class)
+    @Record(value = ExecutionTime.RUNTIME_INIT)
+    SyntheticBeanBuildItem createGroupMembershipBean(GroupMembershipRecorder recorder,
+            ZookeeperConfiguration zookeeperConfiguration,
+            ShutdownContextBuildItem shutdownContextBuildItem) {
+
+        // assert zk != null : "ZooKeeper client cannot be null";
+
+        var groupMembership = recorder.create(zookeeperConfiguration, shutdownContextBuildItem);
+        return SyntheticBeanBuildItem
+                .configure(GroupMembership.class)
+                .scope(ApplicationScoped.class)
+                .runtimeValue(groupMembership)
                 .setRuntimeInit()
                 .unremovable()
                 .done();
