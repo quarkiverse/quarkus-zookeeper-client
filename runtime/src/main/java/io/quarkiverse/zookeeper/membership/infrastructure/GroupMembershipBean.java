@@ -7,8 +7,12 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.ObservesAsync;
+import javax.inject.Inject;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -19,11 +23,14 @@ import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
+import io.quarkiverse.zookeeper.config.GroupMembershipConfiguration;
 import io.quarkiverse.zookeeper.membership.model.GroupMembership;
 import io.quarkiverse.zookeeper.membership.model.GroupMembershipEvent;
 
+@ApplicationScoped
 public class GroupMembershipBean implements GroupMembership {
 
     private static final Logger LOG = Logger.getLogger(GroupMembership.class);
@@ -31,14 +38,23 @@ public class GroupMembershipBean implements GroupMembership {
     private static final Set<KeeperState> CONNECTED_STATES = Set.of(KeeperState.ConnectedReadOnly,
             KeeperState.SaslAuthenticated, KeeperState.SyncConnected);
 
-    private Event<Object> event;
-    private ZooKeeper client;
+    @Inject
+    Event<GroupMembershipEvent> event;
+    @Inject
+    ZooKeeper client;
 
     private volatile PartyStatus partyStatus = PartyStatus.Alone;
 
-    private Path selfNode;
+    @ConfigProperty(name = GroupMembershipConfiguration.NAMESPACE)
+    String namespace;
+    @ConfigProperty(name = GroupMembershipConfiguration.MEMBERSHIP_GROUP_ID)
+    String groupId;
 
-    private String groupId;
+    private Path nsPath;
+    private Path groupPath;
+    private String dataNode;
+    private String selfNode;
+
     private String name;
     {
         try {
@@ -46,11 +62,6 @@ public class GroupMembershipBean implements GroupMembership {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public GroupMembershipBean(ZooKeeper client, Event<Object> event) {
-        this.client = client;
-        this.event = event;
     }
 
     @Override
@@ -64,6 +75,7 @@ public class GroupMembershipBean implements GroupMembership {
     }
 
     public void watchConnectionState(@ObservesAsync WatchedEvent event) {
+        LOG.debugf("Handling group membership on connection state change, %s", event);
         if (EventType.None.equals(event.getType())) {
             synchronized (partyStatus) {
                 if (CONNECTED_STATES.contains(event.getState())) {
@@ -75,23 +87,20 @@ public class GroupMembershipBean implements GroupMembership {
         }
     }
 
-    public void init(String namespace, String groupId) {
-        this.groupId = groupId;
+    @PostConstruct
+    public void init() {
 
-        var nsPath = Path.of("/", namespace);
-        var groupPath = nsPath.resolve(groupId);
-        var dataPath = groupPath.resolve("status");
-
-        this.selfNode = groupPath.resolve(name);
+        this.nsPath = Path.of("/", namespace);
+        this.groupPath = this.nsPath.resolve(groupId);
+        this.dataNode = this.groupPath.resolve("status").toString();
+        this.selfNode = this.groupPath.resolve(name).toString();
 
         synchronized (partyStatus) {
-            grantNamespaceNode(nsPath.toString());
-            grantGroupNode(groupPath.toString());
-            grantDataNode(dataPath.toString());
             tryJoin();
         }
     }
 
+    @PreDestroy
     public void leave() {
         if (client.getState().isConnected() && partyStatus.partecipating()) {
             LOG.debugf("[%s] is leaving [%s]", name, groupId);
@@ -105,32 +114,54 @@ public class GroupMembershipBean implements GroupMembership {
     private void tryJoin() {
         if (client.getState().isConnected() && !partyStatus.partecipating()) {
             LOG.debugf("Joining [%s] as [%s]", groupId, name);
-            grantSelfNode();
+            grantNodeHierarchy();
             partyStatus = PartyStatus.Partecipating;
             event.fireAsync(new GroupMembershipEvent(partyStatus));
             LOG.debugf("[%s] has joined the group [%s]", name, groupId);
         }
     }
 
-    private void grantNamespaceNode(String namespace) {
-        grantNode(namespace, CreateMode.CONTAINER);
+    private void grantNodeHierarchy() {
+        grantNamespaceNode();
+        grantGroupNode();
+        grantDataNode();
+        grantSelfNode();
     }
 
-    private void grantGroupNode(String groupNode) {
-        grantNode(groupNode, CreateMode.CONTAINER);
+    private void grantNamespaceNode() {
+        var ns = this.nsPath.toString();
+        if (!nodeExists(ns)) {
+            LOG.debugf("Creating the namespace [%s]", ns);
+            grantNode(ns, CreateMode.CONTAINER);
+        }
     }
 
-    private void grantDataNode(String dataNode) {
-        grantNode(dataNode, CreateMode.PERSISTENT);
+    private void grantGroupNode() {
+        var group = this.groupPath.toString();
+        if (!nodeExists(group)) {
+            LOG.debugf("Creating the group [%s]", group);
+            grantNode(group, CreateMode.CONTAINER);
+        }
+    }
+
+    private void grantDataNode() {
+        if (!nodeExists(this.dataNode)) {
+            LOG.debugf("Creating the data node [%s]", this.dataNode);
+            grantNode(this.dataNode, CreateMode.PERSISTENT);
+        }
     }
 
     private void grantSelfNode() {
-        grantNode(this.selfNode.toString(), CreateMode.EPHEMERAL);
+        if (!nodeExists(this.selfNode)) {
+            LOG.debugf("Creating self [%s]", this.selfNode);
+            grantNode(this.selfNode, CreateMode.EPHEMERAL);
+        }
     }
 
     private void removeSelfNode() {
         // No children are expected
-        removeNode(this.selfNode.toString(), 1);
+        if (!nodeExists(this.selfNode))
+            removeNode(this.selfNode, 1);
     }
 
     private void grantNode(String path, CreateMode mode) {
@@ -152,6 +183,17 @@ public class GroupMembershipBean implements GroupMembership {
             client.delete(path, cversion);
         } catch (NoNodeException e) {
             // Nothing to do
+        } catch (KeeperException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean nodeExists(String path) {
+        try {
+            return client.exists(path, false) != null;
         } catch (KeeperException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

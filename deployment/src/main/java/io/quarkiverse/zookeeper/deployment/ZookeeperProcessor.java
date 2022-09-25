@@ -4,12 +4,15 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.zookeeper.Login;
 import org.apache.zookeeper.ZooKeeper;
+import org.jboss.jandex.DotName;
 
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
 import io.quarkiverse.zookeeper.deployment.capabilities.GroupMembershipSupplier;
 import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.health.infrastructure.ZookeeperReadyCheck;
-import io.quarkiverse.zookeeper.membership.model.GroupMembership;
+import io.quarkiverse.zookeeper.membership.infrastructure.GroupMembershipBean;
+import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
+import io.quarkus.arc.deployment.AutoInjectAnnotationBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.deployment.Capabilities;
 import io.quarkus.deployment.Capability;
@@ -26,6 +29,7 @@ import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 class ZookeeperProcessor {
 
     private static final String FEATURE = ZookeeperConfiguration.EXTENSION_NAME;
+    private static final String ZK_CLIENT_ANNOTATION_NAME = "io.quarkiverse.zookeeper.deployment.ZKClient";
 
     @BuildStep
     FeatureBuildItem zookeeper() {
@@ -77,6 +81,11 @@ class ZookeeperProcessor {
     }
 
     @BuildStep
+    AutoInjectAnnotationBuildItem injectableZKClient() {
+        return new AutoInjectAnnotationBuildItem(DotName.createSimple(ZK_CLIENT_ANNOTATION_NAME));
+    }
+
+    @BuildStep
     @Record(value = ExecutionTime.RUNTIME_INIT)
     SyntheticBeanBuildItem createZookeeperBean(ZookeeperRecorder recorder,
             ShutdownContextBuildItem shutdownContextBuildItem) {
@@ -92,20 +101,7 @@ class ZookeeperProcessor {
     }
 
     @BuildStep(onlyIf = GroupMembershipSupplier.class)
-    @Record(value = ExecutionTime.RUNTIME_INIT)
-    SyntheticBeanBuildItem createGroupMembershipBean(GroupMembershipRecorder recorder,
-            ZookeeperConfiguration zookeeperConfiguration,
-            ShutdownContextBuildItem shutdownContextBuildItem) {
-
-        // assert zk != null : "ZooKeeper client cannot be null";
-
-        var groupMembership = recorder.create(zookeeperConfiguration, shutdownContextBuildItem);
-        return SyntheticBeanBuildItem
-                .configure(GroupMembership.class)
-                .scope(ApplicationScoped.class)
-                .runtimeValue(groupMembership)
-                .setRuntimeInit()
-                .unremovable()
-                .done();
+    AdditionalBeanBuildItem createGroupMembershipBean() {
+        return AdditionalBeanBuildItem.unremovableOf(GroupMembershipBean.class);
     }
 }

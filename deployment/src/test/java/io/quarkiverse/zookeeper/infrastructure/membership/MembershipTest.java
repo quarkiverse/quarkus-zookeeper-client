@@ -1,21 +1,16 @@
 package io.quarkiverse.zookeeper.infrastructure.membership;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
-import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
-import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.AfterAll;
@@ -25,11 +20,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
 
+import io.quarkiverse.zookeeper.membership.model.GroupMembership;
 import io.quarkus.test.QuarkusUnitTest;
 
 public class MembershipTest {
 
-    private static final Logger LOG = Logger.getLogger(MembershipTest.class);
+    private static final Duration TIMEOUT = Duration.ofSeconds(5);
 
     // Start unit test with your extension loaded
     @RegisterExtension
@@ -57,39 +53,16 @@ public class MembershipTest {
     @Inject
     ZooKeeper zk;
 
-    // @Inject
-    // GroupMembership groupMembership;
+    @Inject
+    GroupMembership membership;
 
     @Test
-    void testConfiguration() throws IOException {
-
-        assertNotNull(zk);
-
-        final Phaser testCoordinator = new Phaser(2);
-        final AtomicBoolean connected = new AtomicBoolean(false);
-        zk.register(event -> {
-            LOG.infof("Processing event for state [%s] and type [%s]", event.getState(), event.getType());
-            if (KeeperState.SyncConnected == event.getState()) {
-                LOG.info("Client connected to zookeeper");
-                connected.compareAndSet(false, true);
-                testCoordinator.arriveAndDeregister();
-            } else if (KeeperState.Closed == event.getState()) {
-                LOG.info("Client connection closed");
-            }
-        });
-
-        assertFalse(connected.get());
-        // assertFalse(groupMembership.partyStatus().partecipating());
-        var testPhase = testCoordinator.arriveAndDeregister();
-        try {
-            testCoordinator.awaitAdvanceInterruptibly(testPhase, 30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
-        assertTrue(connected.get());
-        // assertTrue(groupMembership.partyStatus().partecipating());
+    void testConfiguration() throws InterruptedException, TimeoutException {
+        assertFalse(membership.partyStatus().partecipating());
+        var now = Instant.now();
+        do {
+            Thread.sleep(100);
+        } while (!membership.partyStatus().partecipating() && Duration.between(now, Instant.now()).compareTo(TIMEOUT) == -1);
+        assertTrue(membership.partyStatus().partecipating());
     }
 }

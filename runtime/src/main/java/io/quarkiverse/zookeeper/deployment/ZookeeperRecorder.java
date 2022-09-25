@@ -45,7 +45,7 @@ public class ZookeeperRecorder {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.clearProperty("java.security.auth.login.config");
+            System.clearProperty(Environment.JAAS_CONF_KEY);
         });
 
         return new RuntimeValue<>(rv);

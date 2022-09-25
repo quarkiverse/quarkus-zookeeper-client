@@ -8,6 +8,9 @@ import io.quarkus.runtime.annotations.ConfigItem;
 @ConfigGroup
 public class GroupMembershipConfiguration {
 
+    public static final String MEMBERSHIP_GROUP_ID = "quarkus.zookeeper.membership.group-id";
+    public static final String NAMESPACE = "quarkus.zookeeper.membership.namespace";
+
     /**
      * Set the value to true to enable group membership and shared group status.
      */
