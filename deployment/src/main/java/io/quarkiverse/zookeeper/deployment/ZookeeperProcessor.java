@@ -1,5 +1,7 @@
 package io.quarkiverse.zookeeper.deployment;
 
+import java.util.Collections;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.zookeeper.Login;
@@ -9,12 +11,14 @@ import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
 import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
+import io.quarkus.bootstrap.model.AppArtifactKey;
 import io.quarkus.deployment.Capabilities;
 import io.quarkus.deployment.Capability;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.RemovedResourceBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageSecurityProviderBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
@@ -38,6 +42,12 @@ class ZookeeperProcessor {
         } else {
             return null;
         }
+    }
+
+    @BuildStep
+    RemovedResourceBuildItem removeSlf4jBinding() {
+        return new RemovedResourceBuildItem(new AppArtifactKey("ch.qos.logback", "logback-classic", null, "jar"),
+                Collections.singleton("org/slf4j/impl/StaticLoggerBinder.class"));
     }
 
     @BuildStep
