@@ -13,7 +13,7 @@ ZooKeeper is a centralized service for maintaining configuration information, na
 
 ## Documentation
 
-See https://quarkiverse.github.io/quarkiverse-docs/quarkus-zookeeper/dev/index.html
+See https://quarkiverse.github.io/quarkiverse-docs/quarkus-zookeeper-client/dev/index.html
 
 ## Contributors ✨
 
@@ -34,3 +34,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
