@@ -6,10 +6,19 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.zookeeper.Login;
 import org.apache.zookeeper.ZooKeeper;
+import org.jboss.jandex.DotName;
 
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
+import io.quarkiverse.zookeeper.deployment.capabilities.GroupMembershipSupplier;
 import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
-import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
+import io.quarkiverse.zookeeper.health.infrastructure.ZookeeperReadyCheck;
+import io.quarkiverse.zookeeper.membership.infrastructure.GroupMembershipBean;
+import io.quarkiverse.zookeeper.membership.infrastructure.MembershipStatusBean;
+import io.quarkiverse.zookeeper.membership.infrastructure.MembershipStatusWatcherHolder;
+import io.quarkiverse.zookeeper.membership.infrastructure.ReactiveMembershipStatusBean;
+import io.quarkiverse.zookeeper.membership.infrastructure.ZookeeperFaçade;
+import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
+import io.quarkus.arc.deployment.AutoInjectAnnotationBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.bootstrap.model.AppArtifactKey;
 import io.quarkus.deployment.Capabilities;
@@ -28,6 +37,7 @@ import io.quarkus.smallrye.health.deployment.spi.HealthBuildItem;
 class ZookeeperProcessor {
 
     private static final String FEATURE = ZookeeperConfiguration.EXTENSION_NAME;
+    private static final String ZK_CLIENT_ANNOTATION_NAME = "io.quarkiverse.zookeeper.deployment.ZKClient";
 
     @BuildStep
     FeatureBuildItem zookeeper() {
@@ -39,6 +49,16 @@ class ZookeeperProcessor {
         if (capabilities.isPresent(Capability.SMALLRYE_HEALTH)) {
             return new HealthBuildItem(ZookeeperReadyCheck.class.getName(),
                     config.healthEnabled);
+        } else {
+            return null;
+        }
+    }
+
+    @BuildStep(onlyIf = GroupMembershipSupplier.class)
+    HealthBuildItem addGroupMembershipReadiness(ZookeeperBuildTimeConfiguration config) {
+        // TODO
+        if (config.membership.enable) {
+            return null;
         } else {
             return null;
         }
@@ -75,6 +95,11 @@ class ZookeeperProcessor {
     }
 
     @BuildStep
+    AutoInjectAnnotationBuildItem injectableZKClient() {
+        return new AutoInjectAnnotationBuildItem(DotName.createSimple(ZK_CLIENT_ANNOTATION_NAME));
+    }
+
+    @BuildStep
     @Record(value = ExecutionTime.RUNTIME_INIT)
     SyntheticBeanBuildItem createZookeeperBean(ZookeeperRecorder recorder,
             ShutdownContextBuildItem shutdownContextBuildItem) {
@@ -87,5 +112,30 @@ class ZookeeperProcessor {
                 .setRuntimeInit()
                 .unremovable()
                 .done();
+    }
+
+    @BuildStep(onlyIf = GroupMembershipSupplier.class)
+    AdditionalBeanBuildItem createGroupMembershipBean() {
+        return AdditionalBeanBuildItem.unremovableOf(GroupMembershipBean.class);
+    }
+
+    @BuildStep(onlyIf = { GroupMembershipSupplier.class, GroupMembershipSupplier.WithGroupStatus.class })
+    AdditionalBeanBuildItem createGroupStatusBean() {
+        return AdditionalBeanBuildItem.builder()
+                .setUnremovable()
+                .addBeanClass(MembershipStatusBean.class)
+                .addBeanClass(MembershipStatusWatcherHolder.class)
+                .addBeanClass(ZookeeperFaçade.class)
+                .build();
+    }
+
+    @BuildStep(onlyIf = { GroupMembershipSupplier.class, GroupMembershipSupplier.WithReactiveGroupStatus.class })
+    AdditionalBeanBuildItem createReactiveGroupStatusBean() {
+        return AdditionalBeanBuildItem.builder()
+                .setUnremovable()
+                .addBeanClass(ReactiveMembershipStatusBean.class)
+                .addBeanClass(MembershipStatusWatcherHolder.class)
+                .addBeanClass(ZookeeperFaçade.class)
+                .build();
     }
 }

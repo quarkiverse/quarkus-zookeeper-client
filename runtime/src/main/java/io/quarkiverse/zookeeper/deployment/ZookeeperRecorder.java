@@ -39,13 +39,13 @@ public class ZookeeperRecorder {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        shutdownContext.addShutdownTask(() -> {
+        shutdownContext.addLastShutdownTask(() -> {
             try {
                 rv.close(config.session.timeout);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.clearProperty("java.security.auth.login.config");
+            System.clearProperty(Environment.JAAS_CONF_KEY);
         });
 
         return new RuntimeValue<>(rv);

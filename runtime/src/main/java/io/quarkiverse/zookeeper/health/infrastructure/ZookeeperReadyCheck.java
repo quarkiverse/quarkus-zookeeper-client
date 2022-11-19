@@ -1,4 +1,4 @@
-package io.quarkiverse.zookeeper.infrastructure.health;
+package io.quarkiverse.zookeeper.health.infrastructure;
 
 import static java.util.stream.Collectors.toList;
 
