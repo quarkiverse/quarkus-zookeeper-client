@@ -1,6 +1,5 @@
 package io.quarkiverse.zookeeper.membership.model;
 
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -54,13 +53,6 @@ public interface MembershipStatus {
      * @return the set of the keys.
      */
     Set<String> keys();
-
-    /**
-     * An iterator over the group status entries.
-     *
-     * @return the iterator.
-     */
-    Iterator<StatusEntry> iterator();
 
     /**
      * Add a callback to be invoked when the group status changes.

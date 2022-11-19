@@ -10,7 +10,6 @@ import javax.enterprise.context.ApplicationScoped;
 import io.quarkiverse.zookeeper.membership.model.ReactiveMembershipStatus;
 import io.quarkiverse.zookeeper.membership.model.StatusEntry;
 import io.quarkiverse.zookeeper.membership.model.StatusEntryChanged;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
@@ -49,12 +48,6 @@ public class ReactiveMembershipStatusBean implements ReactiveMembershipStatus {
 
     @Override
     public Uni<Set<String>> keys() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Multi<StatusEntry> entries() {
         // TODO Auto-generated method stub
         return null;
     }

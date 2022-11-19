@@ -3,7 +3,6 @@ package io.quarkiverse.zookeeper.membership.model;
 import java.util.Set;
 import java.util.concurrent.Flow.Subscriber;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface ReactiveMembershipStatus {
@@ -54,13 +53,6 @@ public interface ReactiveMembershipStatus {
      * @return the action to retrieve the set of the keys.
      */
     Uni<Set<String>> keys();
-
-    /**
-     * A stream of groups status entries..
-     *
-     * @return the stream of the entries.
-     */
-    Multi<StatusEntry> entries();
 
     /**
      * Add a subscriber for the group status changes.

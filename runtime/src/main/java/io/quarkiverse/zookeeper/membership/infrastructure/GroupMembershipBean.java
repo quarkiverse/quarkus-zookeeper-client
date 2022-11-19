@@ -75,6 +75,12 @@ public class GroupMembershipBean implements GroupMembership {
         return partyStatus;
     }
 
+    public void assertPartecipating() {
+        if (!partyStatus.partecipating()) {
+            throw new IllegalStateException();
+        }
+    }
+
     String lockNode() {
         return lockNode;
     }
@@ -83,7 +89,7 @@ public class GroupMembershipBean implements GroupMembership {
         return dataNode;
     }
 
-    public void watchConnectionState(@ObservesAsync WatchedEvent event) {
+    void watchConnectionState(@ObservesAsync WatchedEvent event) {
         LOG.debugf("Handling group membership on connection state change, %s", event);
         if (EventType.None.equals(event.getType())) {
             synchronized (partyStatus) {
@@ -97,7 +103,7 @@ public class GroupMembershipBean implements GroupMembership {
     }
 
     @PostConstruct
-    public void init() {
+    void init() {
 
         this.nsPath = Path.of("/", namespace);
         this.groupPath = this.nsPath.resolve(groupId);
@@ -111,7 +117,7 @@ public class GroupMembershipBean implements GroupMembership {
     }
 
     @PreDestroy
-    public void leave() {
+    void leave() {
         if (client.getState().isConnected() && partyStatus.partecipating()) {
             LOG.debugf("[%s] is leaving [%s]", name, groupId);
             removeSelfNode();
