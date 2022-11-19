@@ -6,7 +6,11 @@ public class GroupMembershipEvent {
 
     private PartyStatus partyStatus;
 
-    public GroupMembershipEvent(PartyStatus partyStatus) {
+    public static GroupMembershipEvent of(PartyStatus partyStatus) {
+        return new GroupMembershipEvent(partyStatus);
+    }
+
+    private GroupMembershipEvent(PartyStatus partyStatus) {
         this.partyStatus = partyStatus;
     }
 

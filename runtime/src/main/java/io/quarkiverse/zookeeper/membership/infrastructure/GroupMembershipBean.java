@@ -107,8 +107,12 @@ public class GroupMembershipBean implements GroupMembership {
             removeSelfNode();
         }
         partyStatus = PartyStatus.Alone;
-        event.fireAsync(new GroupMembershipEvent(partyStatus));
+        event.fireAsync(GroupMembershipEvent.of(partyStatus));
         LOG.infof("[%s] has left the group [%s]", name, groupId);
+    }
+
+    String dataNode() {
+        return dataNode;
     }
 
     private void tryJoin() {
@@ -116,7 +120,7 @@ public class GroupMembershipBean implements GroupMembership {
             LOG.debugf("Joining [%s] as [%s]", groupId, name);
             grantNodeHierarchy();
             partyStatus = PartyStatus.Partecipating;
-            event.fireAsync(new GroupMembershipEvent(partyStatus));
+            event.fireAsync(GroupMembershipEvent.of(partyStatus));
             LOG.debugf("[%s] has joined the group [%s]", name, groupId);
         }
     }

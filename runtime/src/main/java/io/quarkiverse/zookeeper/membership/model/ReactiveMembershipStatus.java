@@ -1,7 +1,7 @@
 package io.quarkiverse.zookeeper.membership.model;
 
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Flow.Subscriber;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -17,6 +17,16 @@ public interface ReactiveMembershipStatus {
      *         if the key has been just created.
      */
     Uni<byte[]> put(byte[] value, String key);
+
+    /**
+     * Put a value, identified by the key, into the group status. It performs a
+     * version test (optimistic lock) raising a runtime exception if the test fails.
+     *
+     * @param entry the status entry.
+     * @return the action to put a value within the group status holding a null item
+     *         if the key has been just created.
+     */
+    Uni<byte[]> put(StatusEntry entry);
 
     /**
      * Get a value, identified by the key, from the group status. It refreshes the
@@ -50,5 +60,21 @@ public interface ReactiveMembershipStatus {
      *
      * @return the stream of the entries.
      */
-    Multi<Map.Entry<String, byte[]>> entries();
+    Multi<StatusEntry> entries();
+
+    /**
+     * Add a subscriber for the group status changes.
+     *
+     * @param onChangeSubscriber the subscriber to manage the current status in form
+     *        of {@link StatusEntryChanged}.
+     */
+    void addAnChangeSubscriber(Subscriber<StatusEntryChanged> onChangeSubscriber);
+
+    /**
+     * Removes a subscriber for the group status changes.
+     *
+     * @param onChangeSubscriber the subscriber expected to manage the current
+     *        status in form of {@link StatusEntryChanged}.
+     */
+    boolean removeOnChangeSubscriber(Subscriber<StatusEntryChanged> onChangeSubscriber);
 }
