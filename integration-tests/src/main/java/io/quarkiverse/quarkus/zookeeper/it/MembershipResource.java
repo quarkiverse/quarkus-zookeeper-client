@@ -24,6 +24,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.quarkiverse.zookeeper.membership.model.GroupMembership.PartyStatus;
+import io.quarkiverse.zookeeper.membership.model.MembershipStatus;
+import io.quarkiverse.zookeeper.membership.model.ReactiveMembershipStatus;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 
@@ -33,6 +35,12 @@ public class MembershipResource {
 
     @Inject
     MembershipService service;
+
+    @Inject
+    MembershipStatus status;
+
+    @Inject
+    ReactiveMembershipStatus reactiveStatus;
 
     @GET
     @Path("/reactive")

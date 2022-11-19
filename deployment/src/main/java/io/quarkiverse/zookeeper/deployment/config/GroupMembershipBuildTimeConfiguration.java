@@ -11,4 +11,16 @@ public class GroupMembershipBuildTimeConfiguration {
      */
     @ConfigItem(defaultValue = "false", defaultValueDocumentation = "false")
     public boolean enable;
+
+    /**
+     * Request the management of a shared group status.
+     */
+    @ConfigItem(defaultValue = "false", defaultValueDocumentation = "false")
+    public boolean withGroupStatus;
+
+    /**
+     * Request the reactive management of a shared group status.
+     */
+    @ConfigItem(defaultValue = "false", defaultValueDocumentation = "false")
+    public boolean withReactiveGroupStatus;
 }

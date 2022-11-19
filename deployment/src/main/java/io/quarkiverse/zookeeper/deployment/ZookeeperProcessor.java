@@ -13,6 +13,8 @@ import io.quarkiverse.zookeeper.deployment.capabilities.GroupMembershipSupplier;
 import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.health.infrastructure.ZookeeperReadyCheck;
 import io.quarkiverse.zookeeper.membership.infrastructure.GroupMembershipBean;
+import io.quarkiverse.zookeeper.membership.infrastructure.MembershipStatusBean;
+import io.quarkiverse.zookeeper.membership.infrastructure.ReactiveMembershipStatusBean;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.AutoInjectAnnotationBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
@@ -113,5 +115,15 @@ class ZookeeperProcessor {
     @BuildStep(onlyIf = GroupMembershipSupplier.class)
     AdditionalBeanBuildItem createGroupMembershipBean() {
         return AdditionalBeanBuildItem.unremovableOf(GroupMembershipBean.class);
+    }
+
+    @BuildStep(onlyIf = { GroupMembershipSupplier.class, GroupMembershipSupplier.WithGroupStatus.class })
+    AdditionalBeanBuildItem createGroupStatusBean() {
+        return AdditionalBeanBuildItem.unremovableOf(MembershipStatusBean.class);
+    }
+
+    @BuildStep(onlyIf = { GroupMembershipSupplier.class, GroupMembershipSupplier.WithReactiveGroupStatus.class })
+    AdditionalBeanBuildItem createReactiveGroupStatusBean() {
+        return AdditionalBeanBuildItem.unremovableOf(ReactiveMembershipStatusBean.class);
     }
 }
