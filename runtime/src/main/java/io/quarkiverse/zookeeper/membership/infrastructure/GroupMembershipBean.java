@@ -104,10 +104,10 @@ public class GroupMembershipBean implements GroupMembership {
     public void leave() {
         if (client.getState().isConnected() && partyStatus.partecipating()) {
             LOG.debugf("[%s] is leaving [%s]", name, groupId);
-            event.fireAsync(new GroupMembershipEvent(partyStatus));
             removeSelfNode();
         }
         partyStatus = PartyStatus.Alone;
+        event.fireAsync(new GroupMembershipEvent(partyStatus));
         LOG.infof("[%s] has left the group [%s]", name, groupId);
     }
 
@@ -131,7 +131,7 @@ public class GroupMembershipBean implements GroupMembership {
     private void grantNamespaceNode() {
         var ns = this.nsPath.toString();
         if (!nodeExists(ns)) {
-            LOG.debugf("Creating the namespace [%s]", ns);
+            LOG.tracef("Creating the namespace [%s]", ns);
             grantNode(ns, CreateMode.CONTAINER);
         }
     }
@@ -139,21 +139,21 @@ public class GroupMembershipBean implements GroupMembership {
     private void grantGroupNode() {
         var group = this.groupPath.toString();
         if (!nodeExists(group)) {
-            LOG.debugf("Creating the group [%s]", group);
+            LOG.tracef("Creating the group [%s]", group);
             grantNode(group, CreateMode.CONTAINER);
         }
     }
 
     private void grantDataNode() {
         if (!nodeExists(this.dataNode)) {
-            LOG.debugf("Creating the data node [%s]", this.dataNode);
+            LOG.tracef("Creating the data node [%s]", this.dataNode);
             grantNode(this.dataNode, CreateMode.PERSISTENT);
         }
     }
 
     private void grantSelfNode() {
         if (!nodeExists(this.selfNode)) {
-            LOG.debugf("Creating self [%s]", this.selfNode);
+            LOG.tracef("Creating self [%s]", this.selfNode);
             grantNode(this.selfNode, CreateMode.EPHEMERAL);
         }
     }
