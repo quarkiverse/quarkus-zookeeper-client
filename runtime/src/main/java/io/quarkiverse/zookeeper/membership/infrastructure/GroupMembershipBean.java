@@ -104,11 +104,11 @@ public class GroupMembershipBean implements GroupMembership {
     public void leave() {
         if (client.getState().isConnected() && partyStatus.partecipating()) {
             LOG.debugf("[%s] is leaving [%s]", name, groupId);
-            partyStatus = PartyStatus.Alone;
             event.fireAsync(new GroupMembershipEvent(partyStatus));
             removeSelfNode();
-            LOG.infof("[%s] has left the group [%s]", name, groupId);
         }
+        partyStatus = PartyStatus.Alone;
+        LOG.infof("[%s] has left the group [%s]", name, groupId);
     }
 
     private void tryJoin() {
