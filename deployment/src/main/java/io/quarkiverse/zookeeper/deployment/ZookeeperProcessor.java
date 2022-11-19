@@ -16,6 +16,7 @@ import io.quarkiverse.zookeeper.membership.infrastructure.GroupMembershipBean;
 import io.quarkiverse.zookeeper.membership.infrastructure.MembershipStatusBean;
 import io.quarkiverse.zookeeper.membership.infrastructure.MembershipStatusWatcherHolder;
 import io.quarkiverse.zookeeper.membership.infrastructure.ReactiveMembershipStatusBean;
+import io.quarkiverse.zookeeper.membership.infrastructure.ZookeeperFaçade;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.AutoInjectAnnotationBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
@@ -124,6 +125,7 @@ class ZookeeperProcessor {
                 .setUnremovable()
                 .addBeanClass(MembershipStatusBean.class)
                 .addBeanClass(MembershipStatusWatcherHolder.class)
+                .addBeanClass(ZookeeperFaçade.class)
                 .build();
     }
 
@@ -133,6 +135,7 @@ class ZookeeperProcessor {
                 .setUnremovable()
                 .addBeanClass(ReactiveMembershipStatusBean.class)
                 .addBeanClass(MembershipStatusWatcherHolder.class)
+                .addBeanClass(ZookeeperFaçade.class)
                 .build();
     }
 }

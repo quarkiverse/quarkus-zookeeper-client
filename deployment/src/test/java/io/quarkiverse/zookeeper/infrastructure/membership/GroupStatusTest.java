@@ -1,8 +1,9 @@
 package io.quarkiverse.zookeeper.infrastructure.membership;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
@@ -48,7 +49,23 @@ public class GroupStatusTest {
     MembershipStatus status;
 
     @Test
-    void testConfiguration() throws InterruptedException, TimeoutException {
-        assertTrue(true);
+    void testPutNewProperty() throws InterruptedException, TimeoutException {
+        var key = UUID.randomUUID().toString();
+        var value = UUID.randomUUID().toString().getBytes();
+
+        var rv = status.put(key, value);
+        assertThat(rv).isNotNull().isEmpty();
+    }
+
+    @Test
+    void testReadNewlyAddedProperty() throws InterruptedException, TimeoutException {
+        var key = UUID.randomUUID().toString();
+        var value = UUID.randomUUID().toString().getBytes();
+
+        var rv = status.put(key, value);
+        assertThat(rv).isNotNull().isEmpty();
+
+        var actualValue = status.get(key);
+        assertThat(actualValue).isNotNull().isNotEmpty().contains(value);
     }
 }

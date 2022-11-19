@@ -52,6 +52,7 @@ public class GroupMembershipBean implements GroupMembership {
 
     private Path nsPath;
     private Path groupPath;
+    private String lockNode;
     private String dataNode;
     private String selfNode;
 
@@ -74,6 +75,14 @@ public class GroupMembershipBean implements GroupMembership {
         return partyStatus;
     }
 
+    String lockNode() {
+        return lockNode;
+    }
+
+    String dataNode() {
+        return dataNode;
+    }
+
     public void watchConnectionState(@ObservesAsync WatchedEvent event) {
         LOG.debugf("Handling group membership on connection state change, %s", event);
         if (EventType.None.equals(event.getType())) {
@@ -92,6 +101,7 @@ public class GroupMembershipBean implements GroupMembership {
 
         this.nsPath = Path.of("/", namespace);
         this.groupPath = this.nsPath.resolve(groupId);
+        this.lockNode = this.groupPath.resolve("lock").toString();
         this.dataNode = this.groupPath.resolve("status").toString();
         this.selfNode = this.groupPath.resolve(name).toString();
 
@@ -111,10 +121,6 @@ public class GroupMembershipBean implements GroupMembership {
         LOG.infof("[%s] has left the group [%s]", name, groupId);
     }
 
-    String dataNode() {
-        return dataNode;
-    }
-
     private void tryJoin() {
         if (client.getState().isConnected() && !partyStatus.partecipating()) {
             LOG.debugf("Joining [%s] as [%s]", groupId, name);
@@ -128,6 +134,7 @@ public class GroupMembershipBean implements GroupMembership {
     private void grantNodeHierarchy() {
         grantNamespaceNode();
         grantGroupNode();
+        grantLockNode();
         grantDataNode();
         grantSelfNode();
     }
@@ -152,6 +159,13 @@ public class GroupMembershipBean implements GroupMembership {
         if (!nodeExists(this.dataNode)) {
             LOG.tracef("Creating the data node [%s]", this.dataNode);
             grantNode(this.dataNode, CreateMode.PERSISTENT);
+        }
+    }
+
+    private void grantLockNode() {
+        if (!nodeExists(this.lockNode)) {
+            LOG.tracef("Creating the lock node [%s]", this.lockNode);
+            grantNode(this.lockNode, CreateMode.PERSISTENT);
         }
     }
 

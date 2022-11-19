@@ -1,5 +1,6 @@
 package io.quarkiverse.zookeeper.membership.infrastructure;
 
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
@@ -8,12 +9,16 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import io.quarkiverse.zookeeper.membership.model.MembershipStatus;
 import io.quarkiverse.zookeeper.membership.model.StatusEntry;
 
 @ApplicationScoped
 public class MembershipStatusBean implements MembershipStatus {
+
+    @Inject GroupMembershipBean groupMembershipBean;
+    @Inject ZookeeperFaçade façade;
 
     private Set<BiConsumer<StatusEntry, byte[]>> consumers = ConcurrentHashMap.newKeySet();
 
@@ -24,14 +29,13 @@ public class MembershipStatusBean implements MembershipStatus {
 
     @Override
     public Optional<byte[]> put(String key, byte[] value) {
-        // TODO Auto-generated method stub
-        return Optional.empty();
+        var path = createPath(groupMembershipBean.dataNode(), key);
+        return Optional.ofNullable(façade.write(path, value, true));
     }
 
     @Override
     public Optional<byte[]> put(StatusEntry entry) {
-        // TODO Auto-generated method stub
-        return Optional.empty();
+        return put(entry.key(), entry.value());
     }
 
     @Override
@@ -66,5 +70,9 @@ public class MembershipStatusBean implements MembershipStatus {
     @Override
     public boolean removeOnChangeCallback(BiConsumer<StatusEntry, byte[]> onChangeCallback) {
         return consumers.remove(onChangeCallback);
+    }
+
+    private Path createPath(String dataNode, String key) {
+        return Path.of(dataNode, key);
     }
 }
