@@ -30,6 +30,7 @@ hs_err_pid*
 .classpath
 .settings/
 bin/
+.metadata/
 
 # IntelliJ
 .idea
