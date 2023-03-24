@@ -2,7 +2,7 @@ package io.quarkiverse.zookeeper.deployment;
 
 import java.util.Collections;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.apache.zookeeper.Login;
 import org.apache.zookeeper.ZooKeeper;

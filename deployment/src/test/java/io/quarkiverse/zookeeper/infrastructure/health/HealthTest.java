@@ -9,8 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.enterprise.inject.Any;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Any;
+import jakarta.inject.Inject;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.eclipse.microprofile.health.HealthCheckResponse;
