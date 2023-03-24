@@ -23,30 +23,39 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import io.quarkiverse.zookeeper.membership.model.GroupMembership.PartyStatus;
+import io.quarkiverse.zookeeper.membership.model.MembershipStatus;
+import io.quarkiverse.zookeeper.membership.model.ReactiveMembershipStatus;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 
-@Path("/zookeeper")
+@Path("/membership")
 @RequestScoped
-public class ZookeeperResource {
+public class MembershipResource {
 
     @Inject
-    ZookeeperService service;
+    MembershipService service;
+
+    @Inject
+    MembershipStatus status;
+
+    @Inject
+    ReactiveMembershipStatus reactiveStatus;
 
     @GET
     @Path("/reactive")
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<String> sayConnected() {
+    public Uni<PartyStatus> sayStatus() {
 
-        return service.sayConnected();
+        return service.sayStatus();
     }
 
     @GET
     @Path("/imperative")
     @Produces(MediaType.APPLICATION_JSON)
     @Blocking
-    public String sayConnectedS() {
+    public PartyStatus sayStatusS() {
 
-        return service.sayConnectedS();
+        return service.sayStatusS();
     }
 }

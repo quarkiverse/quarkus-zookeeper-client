@@ -22,6 +22,12 @@ public class ZookeeperConfiguration {
     public SessionConfig session;
 
     /**
+     * Group membership configuration.
+     */
+    @ConfigItem
+    public GroupMembershipConfiguration membership;
+
+    /**
      * Whether to enable health checks.
      */
     @ConfigItem(name = "health.enabled", defaultValue = "true", defaultValueDocumentation = "true")
@@ -29,7 +35,8 @@ public class ZookeeperConfiguration {
 
     @Override
     public String toString() {
-        return "ZookeeperConfiguration [client=" + client + ", session=" + session + ", healthEnabled=" + healthEnabled
+        return "ZookeeperConfiguration [client=" + client + ", session=" + session + ", membership=" + membership
+                + ", healthEnabled=" + healthEnabled
                 + "]";
     }
 }

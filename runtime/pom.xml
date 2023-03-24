@@ -12,6 +12,16 @@
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -38,6 +48,10 @@
 						<configuration>
 							<capabilities>
 								<provides>io.quarkus.zookeeper.client</provides>
+								<providesIf>
+									<positive>io.quarkiverse.zookeeper.deployment.capabilities.GroupMembershipSupplier</positive>
+									<name>io.quarkus.zookeeper.membership</name>
+								</providesIf>
 							</capabilities>
 							<deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}</deployment>
 						</configuration>
