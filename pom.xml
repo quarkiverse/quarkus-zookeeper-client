@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>io.quarkiverse.quarkus-zookeeper</groupId>
 	<artifactId>quarkus-zookeeper-parent</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.4</version>
 	<packaging>pom</packaging>
 	<name>Quarkus - Zookeeper - Parent</name>
 	<modules>
@@ -109,4 +109,8 @@
 			</modules>
 		</profile>
 	</profiles>
+
+  <scm>
+    <tag>1.0.4</tag>
+  </scm>
 </project>
