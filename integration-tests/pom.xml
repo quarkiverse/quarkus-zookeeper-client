@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.quarkiverse.quarkus-zookeeper</groupId>
 		<artifactId>quarkus-zookeeper-parent</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>quarkus-zookeeper-integration-tests</artifactId>
 	<name>Quarkus - Zookeeper - Integration Tests</name>
