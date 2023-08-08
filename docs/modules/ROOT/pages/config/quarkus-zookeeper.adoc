@@ -262,15 +262,4 @@ Environment variable: `+++QUARKUS_ZOOKEEPER_SESSION_CAN_BE_READ_ONLY+++`
 --|boolean 
 |`false`
 
-
-a| [[quarkus-zookeeper_quarkus.zookeeper.health.enabled]]`link:#quarkus-zookeeper_quarkus.zookeeper.health.enabled[quarkus.zookeeper.health.enabled]`
-
-[.description]
---
-Whether to enable health checks.
-
-Environment variable: `+++QUARKUS_ZOOKEEPER_HEALTH_ENABLED+++`
---|boolean 
-|`true`
-
 |===

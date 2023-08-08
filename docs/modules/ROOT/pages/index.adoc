@@ -1,7 +1,7 @@
 = Quarkus - Zookeeper Client
 :extension-status: dev
 
-Stateful client to Apache Zookeeper (https://zookeeper.apache.org/).
+Stateful client to Apache ZooKeeper (https://zookeeper.apache.org/).
 
 ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
 
