@@ -39,7 +39,7 @@ public class ZookeeperSASLTest {
 
     @SuppressWarnings("deprecation")
     // Using a fixed hostPort to match the config property as defined in the basic-connection.properties
-    private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
+    private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.9.0")
             .withEnv("SERVER_JVMFLAGS", "-Djava.security.auth.login.config=/tmp/server_jaas.conf")
             .withCopyFileToContainer(MountableFile.forClasspathResource("server_jaas.conf"), "/tmp/server_jaas.conf")
             .withCopyFileToContainer(MountableFile.forClasspathResource("sasl_zoo.cfg"), "/conf/zoo.cfg")

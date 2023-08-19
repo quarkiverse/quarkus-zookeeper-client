@@ -46,7 +46,7 @@ public class ZookeeperSSLTest {
 
     @SuppressWarnings("deprecation")
     // Using a fixed hostPort to match the config property as defined in the ssl-connection.properties
-    private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.8.0")
+    private static final GenericContainer<?> ZOOKEEPER = new FixedHostPortGenericContainer<>("zookeeper:3.9.0")
             .withEnv(Map.of(
                     "ZOO_AUTOPURGE_PURGEINTERVAL", "1",
                     "SERVER_JVMFLAGS",
