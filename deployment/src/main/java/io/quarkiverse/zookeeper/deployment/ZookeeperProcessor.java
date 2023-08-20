@@ -7,6 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.zookeeper.Login;
 import org.apache.zookeeper.ZooKeeper;
 
+import io.netty.handler.ssl.OpenSsl;
+import io.netty.internal.tcnative.SSL;
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
 import io.quarkiverse.zookeeper.deployment.config.ZookeeperBuildTimeConfiguration;
 import io.quarkiverse.zookeeper.infrastructure.health.ZookeeperReadyCheck;
@@ -52,16 +54,33 @@ class ZookeeperProcessor {
 
     @BuildStep
     ReflectiveClassBuildItem addReflectiveZKClasses() {
-        return new ReflectiveClassBuildItem(true, false, false,
+        return ReflectiveClassBuildItem.builder(
                 org.apache.zookeeper.ClientCnxnSocketNIO.class,
                 org.apache.zookeeper.ClientCnxnSocketNetty.class,
-                org.apache.zookeeper.server.auth.DigestLoginModule.class);
+                org.apache.zookeeper.server.auth.DigestLoginModule.class)
+                .build();
+    }
+
+    @BuildStep
+    ReflectiveClassBuildItem addReflectiveNettyClasses() {
+        return ReflectiveClassBuildItem.builder(
+                io.netty.channel.epoll.EpollSocketChannel.class)
+                .constructors()
+                .build();
     }
 
     @BuildStep
     ReflectiveClassBuildItem addReflectiveProviderClasses() {
-        return new ReflectiveClassBuildItem(true, false, false,
-                "sun.security.provider.ConfigFile");
+        return ReflectiveClassBuildItem.builder(
+                "sun.security.provider.ConfigFile",
+                "com.sun.security.auth.module.Krb5LoginModule",
+                "com.sun.security.auth.module.UnixLoginModule",
+                "com.sun.security.auth.module.JndiLoginModule",
+                "com.sun.security.auth.module.KeyStoreLoginModule",
+                "com.sun.security.auth.module.NTLoginModule",
+                "com.sun.security.auth.module.LdapLoginModule",
+                "com.sun.jmx.remote.security.FileLoginModule")
+                .build();
     }
 
     @BuildStep
@@ -72,6 +91,16 @@ class ZookeeperProcessor {
     @BuildStep
     RuntimeInitializedClassBuildItem addZKLogin() {
         return new RuntimeInitializedClassBuildItem(Login.class.getName());
+    }
+
+    @BuildStep
+    RuntimeInitializedClassBuildItem addNettyOpenSsl() {
+        return new RuntimeInitializedClassBuildItem(OpenSsl.class.getName());
+    }
+
+    @BuildStep
+    RuntimeInitializedClassBuildItem addTCNativeSsl() {
+        return new RuntimeInitializedClassBuildItem(SSL.class.getName());
     }
 
     @BuildStep

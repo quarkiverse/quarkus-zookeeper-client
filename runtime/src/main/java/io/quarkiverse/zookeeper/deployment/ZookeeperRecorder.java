@@ -12,6 +12,7 @@ import org.apache.zookeeper.client.ZKClientConfig;
 import org.apache.zookeeper.common.ClientX509Util;
 import org.apache.zookeeper.common.ZKConfig;
 
+import io.netty.handler.ssl.SslProvider;
 import io.quarkiverse.zookeeper.ClientStatusWatcher;
 import io.quarkiverse.zookeeper.config.ZookeeperConfiguration;
 import io.quarkus.runtime.RuntimeValue;
@@ -76,20 +77,24 @@ public class ZookeeperRecorder {
         config.client.auth.configString.map(uncheckedCreateConfigFile)
                 .ifPresent(filePath -> System.setProperty(Environment.JAAS_CONF_KEY, String.valueOf(filePath)));
 
-        try (var x509Util = new ClientX509Util()) {
-            cfg.setProperty(ZKClientConfig.SECURE_CLIENT, String.valueOf(config.client.secure));
-            config.client.ssl.keyStoreLocation.ifPresent(value -> {
-                cfg.setProperty(x509Util.getSslKeystoreLocationProperty(), value);
-                cfg.setProperty(x509Util.getSslKeystoreTypeProperty(), config.client.ssl.keyStoreType.orElse("JKS"));
-            });
-            config.client.ssl.keyStorePassword
-                    .ifPresent(value -> cfg.setProperty(x509Util.getSslKeystorePasswdProperty(), value));
-            config.client.ssl.trustStoreLocation.ifPresent(value -> {
-                cfg.setProperty(x509Util.getSslTruststoreLocationProperty(), value);
-                cfg.setProperty(x509Util.getSslTruststoreTypeProperty(), config.client.ssl.trustStoreType.orElse("JKS"));
-            });
-            config.client.ssl.trustStorePassword
-                    .ifPresent(value -> cfg.setProperty(x509Util.getSslTruststorePasswdProperty(), value));
+        if (config.client.secure) {
+            try (var x509Util = new ClientX509Util()) {
+                cfg.setProperty(ZKClientConfig.SECURE_CLIENT, String.valueOf(config.client.secure));
+                cfg.setProperty(x509Util.getSslProviderProperty(), String.valueOf(SslProvider.OPENSSL));
+
+                config.client.ssl.keyStoreLocation.ifPresent(value -> {
+                    cfg.setProperty(x509Util.getSslKeystoreLocationProperty(), value);
+                    cfg.setProperty(x509Util.getSslKeystoreTypeProperty(), config.client.ssl.keyStoreType.orElse("JKS"));
+                });
+                config.client.ssl.keyStorePassword
+                        .ifPresent(value -> cfg.setProperty(x509Util.getSslKeystorePasswdProperty(), value));
+                config.client.ssl.trustStoreLocation.ifPresent(value -> {
+                    cfg.setProperty(x509Util.getSslTruststoreLocationProperty(), value);
+                    cfg.setProperty(x509Util.getSslTruststoreTypeProperty(), config.client.ssl.trustStoreType.orElse("JKS"));
+                });
+                config.client.ssl.trustStorePassword
+                        .ifPresent(value -> cfg.setProperty(x509Util.getSslTruststorePasswdProperty(), value));
+            }
         }
 
         return cfg;

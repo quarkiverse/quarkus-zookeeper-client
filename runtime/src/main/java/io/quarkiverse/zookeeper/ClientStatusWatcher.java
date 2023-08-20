@@ -12,7 +12,6 @@ public class ClientStatusWatcher implements Watcher {
 
     @Override
     public void process(WatchedEvent event) {
-
         LOG.infof("Firing asynch [%s] - [%s] - [%s]", event.getPath(), event.getState(), event.getType());
 
         CDI.current().getBeanManager().getEvent().fireAsync(event);
