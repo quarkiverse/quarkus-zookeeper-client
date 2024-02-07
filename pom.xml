@@ -23,10 +23,10 @@
   </scm>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.6.7</quarkus.version>
+    <quarkus.version>3.7.1</quarkus.version>
     <zookeeper.version>3.9.1</zookeeper.version>
     <testcontainers.version>1.19.4</testcontainers.version>
     <assertj-core.version>3.25.3</assertj-core.version>
