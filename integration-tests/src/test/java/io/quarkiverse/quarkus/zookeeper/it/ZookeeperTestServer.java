@@ -10,7 +10,7 @@ import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 
 public class ZookeeperTestServer implements QuarkusTestResourceLifecycleManager {
 
-    private static final GenericContainer<?> ZOOKEEPER = new GenericContainer<>(DockerImageName.parse("zookeeper:3.9.0"))
+    private static final GenericContainer<?> ZOOKEEPER = new GenericContainer<>(DockerImageName.parse("zookeeper:3.9.2"))
             .withAccessToHost(true)
             .withEnv("SERVER_JVMFLAGS",
                     "-Djava.security.auth.login.config=/tmp/server_jaas.conf -Dzookeeper.serverCnxnFactory=org.apache.zookeeper.server.NettyServerCnxnFactory -Dzookeeper.ssl.keyStore.location=/tmp/ks.jks -Dzookeeper.ssl.keyStore.password=changeit")
