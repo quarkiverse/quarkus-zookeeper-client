@@ -11,6 +11,7 @@
   <version>1.4.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Quarkus - Zookeeper - Parent</name>
+  <description>Stateful client to Apache Zookeeper</description>
   <modules>
     <module>deployment</module>
     <module>runtime</module>
