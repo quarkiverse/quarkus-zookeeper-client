@@ -11,6 +11,7 @@
   <version>1.4.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Quarkus - Zookeeper - Parent</name>
+  <description>Stateful client to Apache Zookeeper</description>
   <modules>
     <module>deployment</module>
     <module>runtime</module>
@@ -26,8 +27,8 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.15.1</quarkus.version>
     <zookeeper.version>3.9.3</zookeeper.version>
+    <quarkus.version>3.16.1</quarkus.version>
     <testcontainers.version>1.20.2</testcontainers.version>
     <assertj-core.version>3.26.3</assertj-core.version>
   </properties>
