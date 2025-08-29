@@ -27,7 +27,7 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <zookeeper.version>3.9.3</zookeeper.version>
+    <zookeeper.version>3.9.4</zookeeper.version>
     <quarkus.version>3.25.2</quarkus.version>
     <testcontainers.version>1.21.3</testcontainers.version>
     <assertj-core.version>3.27.4</assertj-core.version>
