@@ -30,7 +30,7 @@
     <zookeeper.version>3.9.3</zookeeper.version>
     <quarkus.version>3.28.4</quarkus.version>
     <testcontainers.version>2.0.1</testcontainers.version>
-    <assertj-core.version>3.27.4</assertj-core.version>
+    <assertj-core.version>3.27.6</assertj-core.version>
   </properties>
   <dependencyManagement>
     <dependencies>
