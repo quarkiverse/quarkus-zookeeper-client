@@ -28,7 +28,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <zookeeper.version>3.9.3</zookeeper.version>
-    <quarkus.version>3.30.3</quarkus.version>
+    <quarkus.version>3.30.4</quarkus.version>
     <testcontainers.version>2.0.3</testcontainers.version>
     <assertj-core.version>3.27.4</assertj-core.version>
   </properties>
